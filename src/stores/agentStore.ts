@@ -184,15 +184,16 @@ export const useAgentStore = create<AgentStore>()(
         }
       },
 
-      // Add agent - VERSION SIMPLE LOCALE
+      // Add agent - VERSION DIRECTE DATABASESERVICE
       addAgent: async (agentData: CreateAgentRequest) => {
         set({ isLoading: true, error: null });
         
         try {
-          console.log('➕ Création agent local...');
+          console.log('➕ Création agent directe...');
+          console.log('📦 Agent data:', agentData);
           
-          // Créer avec agentServiceSimple
-          const simpleAgentData = {
+          // Créer directement avec databaseService
+          const createData = {
             name: agentData.name,
             identifier: agentData.identifier,
             phone_number: agentData.phoneNumber,
@@ -200,15 +201,18 @@ export const useAgentStore = create<AgentStore>()(
             website_url: agentData.contactInfo?.websiteUrl,
             platform: agentData.platform,
             category: agentData.category,
-            status: 'active',
             description: agentData.about || '',
-            about_description: agentData.about || '',
             internal_notes: agentData.notes || ''
           };
           
-          const result = await agentServiceSimple.create(simpleAgentData);
+          console.log('📤 Create data préparé:', createData);
+          
+          const result = await databaseService.create(createData);
+          
+          console.log('📥 Résultat création:', result);
           
           if (result.error) {
+            console.error('❌ Erreur création:', result.error);
             throw new Error('Échec de création: ' + result.error);
           }
           
@@ -348,17 +352,21 @@ export const useAgentStore = create<AgentStore>()(
         }
       },
 
-      // Delete agent - VERSION SIMPLE LOCALE
+      // Delete agent - VERSION DIRECTE DATABASESERVICE
       deleteAgent: async (id: string) => {
         set({ isLoading: true, error: null });
         
         try {
-          console.log('🗑️ Suppression agent local...');
+          console.log('🗑️ Suppression agent directe...');
+          console.log('🆔 ID à supprimer:', id);
           
-          // Supprimer avec agentServiceSimple
-          const result = await agentServiceSimple.delete(id);
+          // Supprimer directement avec databaseService
+          const result = await databaseService.delete(id);
+          
+          console.log('📥 Résultat suppression:', result);
           
           if (result.error) {
+            console.error('❌ Erreur suppression:', result.error);
             throw new Error('Échec de suppression: ' + result.error);
           }
           
