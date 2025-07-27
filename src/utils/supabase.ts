@@ -28,20 +28,22 @@ if (!supabaseUrl || !supabaseAnonKey || !isRealUrl || !isRealKey) {
 const defaultUrl = 'https://qoynvpciuxhipessvojj.supabase.co';
 const defaultKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFveW52cGNpdXhoaXBlc3N2b2pqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI5OTgzMjgsImV4cCI6MjA2ODU3NDMyOH0.md1_Pxl8YyUTOxdTzhCNgfiIrQkH-WYTIg7XfblL_z8'.trim();
 
-// Créer le client avec configuration minimale pour éviter les erreurs de headers
-let supabaseClient;
-try {
-  supabaseClient = createClient(defaultUrl, String(defaultKey).trim(), {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false
-    }
-  });
-} catch (error) {
-  console.error('❌ Erreur création client Supabase:', error);
-  // Client de fallback
-  supabaseClient = createClient('https://placeholder.supabase.co', 'placeholder', {});
-}
+// Configuration debug pour identifier le problème
+console.log('🔍 Debug Supabase:', {
+  url: defaultUrl,
+  keyLength: defaultKey.length,
+  keyStart: defaultKey.substring(0, 20),
+  env: typeof import.meta.env,
+  nodeEnv: process?.env?.NODE_ENV || 'unknown'
+});
+
+// Créer le client Supabase
+const supabaseClient = createClient(defaultUrl, defaultKey, {
+  auth: {
+    autoRefreshToken: false,
+    persistSession: false
+  }
+});
 
 export const supabase = supabaseClient;
 
