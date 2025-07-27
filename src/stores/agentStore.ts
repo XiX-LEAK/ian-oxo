@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { Agent, AgentFilters, CreateAgentRequest, UpdateAgentRequest, Platform, AgentCategory, AgentStatus } from '@/types/agent';
 import { agentServiceSimple } from '@/services/agentServiceSimple';
+import { databaseService } from '@/services/databaseService';
 
 interface AgentStore {
   // State
@@ -269,15 +270,16 @@ export const useAgentStore = create<AgentStore>()(
         }
       },
 
-      // Update agent - VERSION SIMPLE LOCALE
+      // Update agent - VERSION DIRECTE DATABASESERVICE
       updateAgent: async (agentData: UpdateAgentRequest) => {
         set({ isLoading: true, error: null });
         
         try {
-          console.log('🔄 Mise à jour agent local...');
+          console.log('🔄 Mise à jour agent directe...');
+          console.log('📦 Agent data:', agentData);
           
-          // Mettre à jour avec agentServiceSimple
-          const simpleAgentData = {
+          // Mettre à jour directement avec databaseService
+          const updateData = {
             name: agentData.name,
             identifier: agentData.identifier,
             phone_number: agentData.phoneNumber,
@@ -285,15 +287,18 @@ export const useAgentStore = create<AgentStore>()(
             website_url: agentData.contactInfo?.websiteUrl,
             platform: agentData.platform,
             category: agentData.category,
-            status: 'active',
             description: agentData.about || '',
-            about_description: agentData.about || '',
             internal_notes: agentData.notes || ''
           };
           
-          const result = await agentServiceSimple.update(agentData.id, simpleAgentData);
+          console.log('📤 Update data préparé:', updateData);
+          
+          const result = await databaseService.update(agentData.id, updateData);
+          
+          console.log('📥 Résultat databaseService:', result);
           
           if (result.error) {
+            console.error('❌ Erreur databaseService:', result.error);
             throw new Error('Échec de mise à jour: ' + result.error);
           }
           
