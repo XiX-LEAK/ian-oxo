@@ -147,31 +147,58 @@ class DatabaseService {
 
   async update(id: string, updates: any): Promise<{ data: Agent[], error: any }> {
     try {
+      console.log('🔄 Début modification agent:', id);
+      console.log('📦 Updates reçus:', updates);
+      
       const index = this.data.agents.findIndex(a => a.id === id);
       if (index === -1) {
+        console.error('❌ Agent non trouvé:', id);
         return { data: [], error: new Error('Agent non trouvé') };
       }
 
-      // Transformer les updates pour correspondre à l'interface Agent interne
-      const transformedUpdates = {
-        ...updates,
-        // Mapper les champs qui ont des noms différents
-        phone_number: updates.phone_number || updates.phoneNumber,
-        email: updates.email,
-        website_url: updates.website_url || updates.websiteUrl,
-        about: updates.description || updates.about_description || updates.about,
-        internal_notes: updates.internal_notes || updates.notes,
-        platforms: updates.platforms || [updates.platform],
-        categories: updates.categories || [updates.category]
-      };
+      console.log('📍 Agent trouvé à l\'index:', index);
+      
+      // Transformer les updates de manière sécurisée
+      const transformedUpdates: any = {};
+      
+      // Copier les champs de base
+      if (updates.name) transformedUpdates.name = updates.name;
+      if (updates.identifier) transformedUpdates.identifier = updates.identifier;
+      
+      // Mapper les champs avec fallbacks
+      if (updates.phone_number || updates.phoneNumber) {
+        transformedUpdates.phone_number = updates.phone_number || updates.phoneNumber;
+      }
+      if (updates.email) transformedUpdates.email = updates.email;
+      if (updates.website_url || updates.websiteUrl) {
+        transformedUpdates.website_url = updates.website_url || updates.websiteUrl;
+      }
+      if (updates.description || updates.about_description || updates.about) {
+        transformedUpdates.about = updates.description || updates.about_description || updates.about;
+      }
+      if (updates.internal_notes || updates.notes) {
+        transformedUpdates.internal_notes = updates.internal_notes || updates.notes;
+      }
+      if (updates.platforms) {
+        transformedUpdates.platforms = updates.platforms;
+      } else if (updates.platform) {
+        transformedUpdates.platforms = [updates.platform];
+      }
+      if (updates.categories) {
+        transformedUpdates.categories = updates.categories;
+      } else if (updates.category) {
+        transformedUpdates.categories = [updates.category];
+      }
+
+      console.log('🔄 Updates transformés:', transformedUpdates);
 
       this.data.agents[index] = { ...this.data.agents[index], ...transformedUpdates };
       this.saveData();
-      console.log('✅ Agent modifié:', id);
+      console.log('✅ Agent modifié avec succès:', id);
       return { data: [this.data.agents[index]], error: null };
     } catch (error) {
       console.error('❌ Erreur modification agent:', error);
-      return { data: [], error };
+      return { data: [], error: error };
     }
   }
 
