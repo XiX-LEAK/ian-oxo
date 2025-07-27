@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Header } from '@/components/Header';
 import { AgentList } from '@/components/AgentList';
+import { NewAgentList } from '@/components/NewAgentList';
 import { AdminDashboard } from '@/components/AdminDashboard';
 import { AgentModal } from '@/components/AgentModal';
 import { PasswordReset } from '@/components/PasswordReset';
@@ -659,10 +660,7 @@ function App() {
                 </ScrollReveal>
 
                 <ScrollReveal variant="slideRotate" delay={0.2}>
-                  <AgentList 
-                    onEditAgent={handleEditAgent}
-                    onCreateAgent={handleCreateAgent}
-                  />
+                  <NewAgentList />
                 </ScrollReveal>
               </motion.div>
             ) : (
