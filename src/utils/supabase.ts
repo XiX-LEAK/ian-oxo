@@ -26,15 +26,24 @@ if (!supabaseUrl || !supabaseAnonKey || !isRealUrl || !isRealKey) {
 
 // Créer un client Supabase avec les vraies valeurs forcées
 const defaultUrl = 'https://qoynvpciuxhipessvojj.supabase.co';
-const defaultKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFveW52cGNpdXhoaXBlc3N2b2pqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI5OTgzMjgsImV4cCI6MjA2ODU3NDMyOH0.md1_Pxl8YyUTOxdTzhCNgfiIrQkH-WYTIg7XfblL_z8';
+const defaultKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFveW52cGNpdXhoaXBlc3N2b2pqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI5OTgzMjgsImV4cCI6MjA2ODU3NDMyOH0.md1_Pxl8YyUTOxdTzhCNgfiIrQkH-WYTIg7XfblL_z8'.trim();
 
-export const supabase = createClient(defaultUrl, defaultKey, {
-  auth: {
-    autoRefreshToken: true,
-    persistSession: true,
-    detectSessionInUrl: true
-  }
-});
+// Créer le client avec configuration minimale pour éviter les erreurs de headers
+let supabaseClient;
+try {
+  supabaseClient = createClient(defaultUrl, String(defaultKey).trim(), {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false
+    }
+  });
+} catch (error) {
+  console.error('❌ Erreur création client Supabase:', error);
+  // Client de fallback
+  supabaseClient = createClient('https://placeholder.supabase.co', 'placeholder', {});
+}
+
+export const supabase = supabaseClient;
 
 // Flag pour savoir si Supabase est vraiment configuré - forcé à true
 export const isSupabaseConfigured = true;
