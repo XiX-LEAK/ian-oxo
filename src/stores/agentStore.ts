@@ -168,7 +168,7 @@ export const useAgentStore = create<AgentStore>()(
             set({ 
               agents: fallbackAgents,
               filteredAgents: fallbackAgents,
-              error: 'Données chargées depuis le cache local',
+              error: null,
               isLoading: false 
             });
           } catch (fallbackError) {
