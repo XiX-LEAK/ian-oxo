@@ -269,36 +269,32 @@ export const useAgentStore = create<AgentStore>()(
         }
       },
 
-      // Update agent - VERSION ULTRA SIMPLE SANS ERREUR
+      // Update agent - VERSION SIMPLE LOCALE
       updateAgent: async (agentData: UpdateAgentRequest) => {
         set({ isLoading: true, error: null });
         
         try {
-          if (isSupabaseConfigured) {
-            // Mise à jour MINIMALISTE dans Supabase
-            console.log('🔄 Mise à jour agent dans Supabase...');
-            const supabaseAgentData = {
-              name: agentData.name,
-              identifier: agentData.identifier,
-              phone_number: agentData.phoneNumber,
-              email: agentData.contactInfo?.email,
-              website_url: agentData.contactInfo?.websiteUrl,
-              platform: 'whatsapp',
-              status: 'active',
-              description: agentData.about || '',           // ✅ CORRECTION: À propos PUBLIC
-              about_description: agentData.about || '',     // ✅ Champ public "À propos"
-              internal_notes: agentData.notes || '',        // ✅ NOUVEAU: Notes privées admin
-              full_name: agentData.name,
-              specialties: agentData.specialties || [],
-              languages: agentData.languages || []
-            };
-            console.log('📤 Données envoyées:', supabaseAgentData);
-            const updatedSupabaseAgent = await agentServiceSimple.update(agentData.id, supabaseAgentData);
-            
-            if (!updatedSupabaseAgent) {
-              throw new Error('Échec de mise à jour dans Supabase');
-            }
-            console.log('✅ Agent mis à jour dans Supabase:', updatedSupabaseAgent.id);
+          console.log('🔄 Mise à jour agent local...');
+          
+          // Mettre à jour avec agentServiceSimple
+          const simpleAgentData = {
+            name: agentData.name,
+            identifier: agentData.identifier,
+            phone_number: agentData.phoneNumber,
+            email: agentData.contactInfo?.email,
+            website_url: agentData.contactInfo?.websiteUrl,
+            platform: agentData.platform,
+            category: agentData.category,
+            status: 'active',
+            description: agentData.about || '',
+            about_description: agentData.about || '',
+            internal_notes: agentData.notes || ''
+          };
+          
+          const result = await agentServiceSimple.update(agentData.id, simpleAgentData);
+          
+          if (result.error) {
+            throw new Error('Échec de mise à jour: ' + result.error);
           }
           
           // Mise à jour locale directe
@@ -347,63 +343,36 @@ export const useAgentStore = create<AgentStore>()(
         }
       },
 
-      // Delete agent
+      // Delete agent - VERSION SIMPLE LOCALE
       deleteAgent: async (id: string) => {
         set({ isLoading: true, error: null });
         
         try {
-          if (isSupabaseConfigured) {
-            // Supprimer de Supabase
-            console.log('🗑️ Suppression agent dans Supabase...');
-            const success = await agentServiceSimple.delete(id);
-            
-            if (!success) {
-              throw new Error('Échec de suppression dans Supabase');
-            }
-            
-            console.log('✅ Agent supprimé de Supabase:', id);
+          console.log('🗑️ Suppression agent local...');
+          
+          // Supprimer avec agentServiceSimple
+          const result = await agentServiceSimple.delete(id);
+          
+          if (result.error) {
+            throw new Error('Échec de suppression: ' + result.error);
           }
           
+          // Mettre à jour le store local
           const currentAgents = get().agents;
           const updatedAgents = currentAgents.filter(agent => agent.id !== id);
-          
-          // Toujours sauvegarder en localStorage pour le cache
-          localStorage.setItem('oxo-agents', JSON.stringify(updatedAgents));
           
           set({ 
             agents: updatedAgents,
             filteredAgents: updatedAgents,
-            isLoading: false 
+            isLoading: false,
+            error: null 
           });
           
           get().applyFilters();
+          console.log('✅ Agent supprimé avec succès:', id);
           return true;
         } catch (error) {
           console.error('❌ Erreur suppression agent:', error);
-          
-          // En cas d'erreur avec Supabase, essayer de supprimer localement
-          if (isSupabaseConfigured) {
-            try {
-              console.log('🔄 Tentative de suppression locale...');
-              const currentAgents = get().agents;
-              const updatedAgents = currentAgents.filter(agent => agent.id !== id);
-              
-              localStorage.setItem('oxo-agents', JSON.stringify(updatedAgents));
-              
-              set({ 
-                agents: updatedAgents,
-                filteredAgents: updatedAgents,
-                error: 'Agent supprimé localement (problème de synchronisation)',
-                isLoading: false 
-              });
-              
-              get().applyFilters();
-              return true;
-            } catch (fallbackError) {
-              console.error('❌ Erreur fallback:', fallbackError);
-            }
-          }
-          
           set({ 
             error: 'Erreur lors de la suppression de l\'agent',
             isLoading: false 
