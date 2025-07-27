@@ -150,7 +150,7 @@ class DatabaseService {
       console.log('🔄 Début modification agent:', id);
       console.log('📦 Updates reçus:', updates);
       
-      const index = this.data.agents.findIndex(a => a.id === id);
+      const index = this.data.agents.findIndex(a => a.id === id || String(a.id) === String(id));
       if (index === -1) {
         console.error('❌ Agent non trouvé:', id);
         return { data: [], error: new Error('Agent non trouvé') };
@@ -204,15 +204,30 @@ class DatabaseService {
 
   async delete(id: string): Promise<{ data: any, error: any }> {
     try {
+      console.log('🗑️ DELETE - ID reçu:', id, 'type:', typeof id);
+      console.log('📋 Agents avant suppression:', this.data.agents.length);
+      console.log('🔍 IDs existants:', this.data.agents.map(a => `${a.id} (${typeof a.id})`));
+      
       const initialLength = this.data.agents.length;
-      this.data.agents = this.data.agents.filter(a => a.id !== id);
+      
+      // Comparaison en string ET en number
+      this.data.agents = this.data.agents.filter(a => {
+        const match = a.id !== id && a.id !== String(id) && String(a.id) !== String(id);
+        if (!match) {
+          console.log('🎯 Agent trouvé pour suppression:', a.id, a.name);
+        }
+        return match;
+      });
+      
+      console.log('📋 Agents après suppression:', this.data.agents.length);
       
       if (this.data.agents.length < initialLength) {
         this.saveData();
-        console.log('✅ Agent supprimé:', id);
+        console.log('✅ Agent supprimé avec succès:', id);
         return { data: { id }, error: null };
       } else {
-        return { data: null, error: new Error('Agent non trouvé') };
+        console.error('❌ Aucun agent trouvé avec ID:', id);
+        return { data: null, error: new Error('Agent non trouvé avec ID: ' + id) };
       }
     } catch (error) {
       console.error('❌ Erreur suppression agent:', error);
