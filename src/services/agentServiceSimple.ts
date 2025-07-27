@@ -45,14 +45,14 @@ class AgentServiceSimple {
       
       if (result.error) {
         console.error('❌ Erreur création:', result.error);
-        throw new Error('Échec de création');
+        return { data: [], error: result.error };
       }
       
       console.log('✅ Agent créé avec succès');
       return result;
     } catch (error) {
       console.error('💥 Exception création:', error);
-      throw new Error('Échec de création');
+      return { data: [], error };
     }
   }
 
@@ -64,14 +64,14 @@ class AgentServiceSimple {
       
       if (result.error) {
         console.error('❌ Erreur modification:', result.error);
-        throw new Error('Échec de modification');
+        return { data: [], error: result.error };
       }
       
       console.log('✅ Agent modifié avec succès');
       return result;
     } catch (error) {
       console.error('💥 Exception modification:', error);
-      throw new Error('Échec de modification');
+      return { data: [], error };
     }
   }
 
