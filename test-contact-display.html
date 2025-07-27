@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Affichage Contact</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 20px; 
+            background: #f5f5f5; 
+        }
+        .test-card {
+            background: white;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .contact-info {
+            margin: 10px 0;
+        }
+        .contact-item {
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+            color: #666;
+        }
+        .contact-item span {
+            margin-right: 8px;
+        }
+        .contact-item a {
+            color: #2563eb;
+            text-decoration: none;
+        }
+        .contact-item a:hover {
+            text-decoration: underline;
+        }
+        .no-contact {
+            color: #999;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test Affichage Conditionnel des Contacts</h1>
+    
+    <div class="test-card">
+        <h3>Agent avec TOUS les contacts</h3>
+        <div class="contact-info" id="agent-full"></div>
+    </div>
+    
+    <div class="test-card">
+        <h3>Agent avec EMAIL seulement</h3>
+        <div class="contact-info" id="agent-email-only"></div>
+    </div>
+    
+    <div class="test-card">
+        <h3>Agent avec SITE WEB seulement</h3>
+        <div class="contact-info" id="agent-website-only"></div>
+    </div>
+    
+    <div class="test-card">
+        <h3>Agent SANS AUCUN contact</h3>
+        <div class="contact-info" id="agent-empty"></div>
+        <p class="no-contact">👆 Ne devrait rien afficher</p>
+    </div>
+
+    <script>
+        // Simulation des agents avec différents cas
+        const agents = {
+            full: {
+                name: "Agent Complet",
+                phoneNumber: "+33123456789",
+                contactInfo: {
+                    email: "agent@example.com",
+                    websiteUrl: "https://monsite.fr"
+                },
+                about: "Description de l'agent"
+            },
+            emailOnly: {
+                name: "Agent Email",
+                phoneNumber: null,
+                contactInfo: {
+                    email: "email@example.com",
+                    websiteUrl: null
+                },
+                about: null
+            },
+            websiteOnly: {
+                name: "Agent Site",
+                phoneNumber: null,
+                contactInfo: {
+                    email: null,
+                    websiteUrl: "https://siteweb.com"
+                },
+                about: null
+            },
+            empty: {
+                name: "Agent Vide",
+                phoneNumber: null,
+                contactInfo: {
+                    email: null,
+                    websiteUrl: null
+                },
+                about: null
+            }
+        };
+
+        function displayContactInfo(agent, containerId) {
+            const container = document.getElementById(containerId);
+            let html = '';
+
+            // Téléphone
+            if (agent.phoneNumber) {
+                html += `
+                    <div class="contact-item">
+                        <span>📞</span>
+                        <a href="tel:${agent.phoneNumber}">${agent.phoneNumber}</a>
+                    </div>
+                `;
+            }
+
+            // Email
+            if (agent.contactInfo?.email) {
+                html += `
+                    <div class="contact-item">
+                        <span>✉️</span>
+                        <a href="mailto:${agent.contactInfo.email}">${agent.contactInfo.email}</a>
+                    </div>
+                `;
+            }
+
+            // Site web
+            if (agent.contactInfo?.websiteUrl) {
+                const displayUrl = agent.contactInfo.websiteUrl.replace(/^https?:\/\//, '');
+                html += `
+                    <div class="contact-item">
+                        <span>🌐</span>
+                        <a href="${agent.contactInfo.websiteUrl}" target="_blank">${displayUrl}</a>
+                    </div>
+                `;
+            }
+
+            // À propos
+            if (agent.about) {
+                html += `
+                    <div class="contact-item">
+                        <span>📝</span>
+                        ${agent.about}
+                    </div>
+                `;
+            }
+
+            // Si aucune information
+            if (!html) {
+                html = '<div class="no-contact">Aucune information de contact</div>';
+            }
+
+            container.innerHTML = html;
+        }
+
+        // Afficher tous les cas de test
+        displayContactInfo(agents.full, 'agent-full');
+        displayContactInfo(agents.emailOnly, 'agent-email-only');
+        displayContactInfo(agents.websiteOnly, 'agent-website-only');
+        displayContactInfo(agents.empty, 'agent-empty');
+
+        // Test spécial pour l'agent vide - ne rien afficher
+        const emptyContainer = document.getElementById('agent-empty');
+        if (!agents.empty.phoneNumber && 
+            !agents.empty.contactInfo?.email && 
+            !agents.empty.contactInfo?.websiteUrl && 
+            !agents.empty.about) {
+            emptyContainer.innerHTML = ''; // Ne rien afficher
+        }
+    </script>
+</body>
+</html>

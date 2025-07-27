@@ -1,0 +1,340 @@
+/* 🚀 Animations ultra-modernes pour OXO Ultimate */
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-15px) rotate(2deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(0deg);
+  }
+  75% {
+    transform: translateY(-12px) rotate(-2deg);
+  }
+}
+
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 
+      0 0 20px rgba(59, 130, 246, 0.4),
+      0 0 40px rgba(168, 85, 247, 0.2),
+      inset 0 0 20px rgba(59, 130, 246, 0.1);
+  }
+  50% {
+    box-shadow: 
+      0 0 40px rgba(59, 130, 246, 0.8),
+      0 0 80px rgba(168, 85, 247, 0.4),
+      inset 0 0 40px rgba(59, 130, 246, 0.2);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-150%) skewX(-20deg);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(150%) skewX(-20deg);
+    opacity: 0;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+    animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+  }
+  50% {
+    transform: translateY(-25%);
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  }
+}
+
+@keyframes spin3d {
+  0% {
+    transform: rotateY(0deg) rotateX(0deg);
+  }
+  50% {
+    transform: rotateY(180deg) rotateX(10deg);
+  }
+  100% {
+    transform: rotateY(360deg) rotateX(0deg);
+  }
+}
+
+@keyframes colorWave {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes morphing {
+  0%, 100% {
+    border-radius: 50% 30% 70% 40%;
+    transform: rotate(0deg) scale(1);
+  }
+  25% {
+    border-radius: 30% 50% 40% 70%;
+    transform: rotate(90deg) scale(1.1);
+  }
+  50% {
+    border-radius: 70% 40% 30% 50%;
+    transform: rotate(180deg) scale(0.9);
+  }
+  75% {
+    border-radius: 40% 70% 50% 30%;
+    transform: rotate(270deg) scale(1.05);
+  }
+}
+
+/* ✨ Classes d'animation avancées */
+
+.gradient-text {
+  background: linear-gradient(135deg, #ff6b35, #ff8c42, #ffa726, #ffb74d, #ffcc80, #ffe0b2, #fff3e0);
+  background-size: 400% 400%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: colorWave 4s ease-in-out infinite;
+}
+
+.glass-effect {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(25px) saturate(180%);
+  -webkit-backdrop-filter: blur(25px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 
+    0 12px 40px rgba(0, 0, 0, 0.08),
+    0 4px 12px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.card-hover-effect {
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+}
+
+.card-hover-effect:hover {
+  transform: translateY(-12px) scale(1.03) rotateX(5deg);
+  box-shadow: 
+    0 25px 80px rgba(0, 0, 0, 0.12),
+    0 10px 30px rgba(0, 0, 0, 0.08),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.floating {
+  animation: float 4s ease-in-out infinite;
+}
+
+.glowing {
+  animation: glow 3s ease-in-out infinite;
+}
+
+.pulsing {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.bouncing {
+  animation: bounce 1s infinite;
+}
+
+.spinning3d {
+  animation: spin3d 8s linear infinite;
+}
+
+.morphing {
+  animation: morphing 6s ease-in-out infinite;
+}
+
+.shimmer-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer-effect::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    110deg,
+    transparent 0%,
+    transparent 40%,
+    rgba(255, 255, 255, 0.6) 50%,
+    rgba(255, 255, 255, 0.8) 55%,
+    rgba(255, 255, 255, 0.6) 60%,
+    transparent 70%,
+    transparent 100%
+  );
+  animation: shimmer 3s infinite;
+}
+
+/* Scrollbar personnalisée */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(45deg, #f59e0b, #ef4444);
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(45deg, #d97706, #dc2626);
+}
+
+/* 🌟 Effets de particules améliorés */
+.particle-bg {
+  position: relative;
+  overflow: hidden;
+}
+
+.particle-bg::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(circle at 15% 25%, rgba(255, 107, 53, 0.15) 2px, transparent 2px),
+    radial-gradient(circle at 85% 75%, rgba(255, 140, 66, 0.12) 1.5px, transparent 1.5px),
+    radial-gradient(circle at 45% 55%, rgba(255, 167, 38, 0.1) 1px, transparent 1px),
+    radial-gradient(circle at 25% 85%, rgba(255, 183, 77, 0.13) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 75% 15%, rgba(255, 204, 128, 0.11) 1.8px, transparent 1.8px);
+  background-size: 80px 80px, 60px 60px, 40px 40px, 90px 90px, 70px 70px;
+  animation: float 15s ease-in-out infinite, spin3d 20s linear infinite;
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+.particle-bg::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    conic-gradient(from 0deg at 30% 70%, transparent 0deg, rgba(255, 255, 255, 0.03) 60deg, transparent 120deg),
+    conic-gradient(from 180deg at 70% 30%, transparent 0deg, rgba(255, 255, 255, 0.04) 90deg, transparent 180deg);
+  animation: morphing 12s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* 🔥 Effets de bordure animée premium */
+.animated-border {
+  position: relative;
+  background: linear-gradient(135deg, 
+    #ff6b35 0%, #ff8c42 14%, #ffa726 28%, 
+    #ffb74d 42%, #ffcc80 56%, #ffe0b2 70%, 
+    #fff3e0 84%, #ff6b35 100%);
+  background-size: 300% 300%;
+  animation: colorWave 5s ease-in-out infinite;
+  padding: 3px;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.animated-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: inherit;
+  filter: blur(8px);
+  opacity: 0.6;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.animated-border > div {
+  background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(248,250,252,0.9) 100%);
+  border-radius: 17px;
+  height: 100%;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+/* 🎨 Nouveaux effets visuels */
+.neon-glow {
+  text-shadow: 
+    0 0 5px currentColor,
+    0 0 10px currentColor,
+    0 0 15px currentColor,
+    0 0 20px currentColor;
+  animation: glow 2s ease-in-out infinite alternate;
+}
+
+.holographic {
+  background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+  background-size: 200% 200%;
+  animation: shimmer 2.5s infinite;
+  position: relative;
+}
+
+.holographic::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, 
+    rgba(255,107,53,0.1), rgba(255,140,66,0.1), 
+    rgba(255,167,38,0.1), rgba(255,183,77,0.1));
+  animation: colorWave 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.magnetic-hover {
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.magnetic-hover:hover {
+  transform: translateY(-8px) scale(1.02);
+  filter: brightness(1.1) contrast(1.1);
+}
+
+.liquid-effect {
+  background: linear-gradient(45deg, #ff8c42 0%, #ffa726 100%);
+  animation: morphing 8s ease-in-out infinite;
+  filter: blur(0.5px);
+}

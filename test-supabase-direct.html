@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Supabase Direct</title>
+</head>
+<body>
+    <h1>🔍 Test Supabase Direct</h1>
+    <button onclick="testConnection()">1. Test Connexion</button>
+    <button onclick="testTable()">2. Test Table Agents</button>
+    <button onclick="createTestAgent()">3. Créer Agent Test</button>
+    <button onclick="runScript()">4. Créer Table</button>
+    
+    <div id="results" style="margin-top: 20px; font-family: monospace; background: #f0f0f0; padding: 10px;"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // Configuration directe
+        const supabaseUrl = 'https://qoynvpciuxhipessvojj.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFveW52cGNpdXhoaXBlc3N2b2pqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI5OTgzMjgsImV4cCI6MjA2ODU3NDMyOH0.md1_Pxl8YyUTOxdTzhCNgfiIrQkH-WYTIg7XfblL_z8';
+        
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+        
+        function log(message) {
+            document.getElementById('results').innerHTML += message + '\n';
+        }
+        
+        async function testConnection() {
+            log('🔌 Test connexion Supabase...');
+            try {
+                const { data, error } = await supabase.from('agents').select('count', { count: 'exact', head: true });
+                if (error) {
+                    log('❌ Erreur connexion: ' + error.message);
+                } else {
+                    log('✅ Connexion OK');
+                }
+            } catch (err) {
+                log('❌ Erreur fatale: ' + err.message);
+            }
+        }
+        
+        async function testTable() {
+            log('📊 Test table agents...');
+            try {
+                const { data, error } = await supabase.from('agents').select('*').limit(1);
+                if (error) {
+                    log('❌ Table agents n\'existe pas: ' + error.message);
+                    log('🔧 Tu dois exécuter le script SQL dans Supabase !');
+                } else {
+                    log('✅ Table agents existe');
+                    if (data && data.length > 0) {
+                        log('📋 Colonnes: ' + Object.keys(data[0]).join(', '));
+                    } else {
+                        log('📋 Table vide');
+                    }
+                }
+            } catch (err) {
+                log('❌ Erreur: ' + err.message);
+            }
+        }
+        
+        async function createTestAgent() {
+            log('🧪 Test création agent...');
+            try {
+                const testAgent = {
+                    name: 'Agent Test Direct',
+                    identifier: 'test_direct_' + Date.now(),
+                    platform: 'whatsapp',
+                    category: 'other',
+                    status: 'active'
+                };
+                
+                const { data, error } = await supabase
+                    .from('agents')
+                    .insert([testAgent])
+                    .select()
+                    .single();
+                
+                if (error) {
+                    log('❌ Création échouée: ' + error.message);
+                    log('🔧 Détails: ' + JSON.stringify(error, null, 2));
+                } else {
+                    log('✅ Agent créé avec succès: ' + data.id);
+                    // Nettoyer
+                    await supabase.from('agents').delete().eq('id', data.id);
+                    log('🧹 Agent test supprimé');
+                }
+            } catch (err) {
+                log('❌ Erreur test: ' + err.message);
+            }
+        }
+        
+        async function runScript() {
+            log('🔧 Création table agents...');
+            try {
+                const { data, error } = await supabase.rpc('exec', {
+                    sql: `
+                        CREATE TABLE IF NOT EXISTS agents (
+                            id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+                            name TEXT,
+                            identifier TEXT,
+                            phone_number TEXT,
+                            email TEXT,
+                            website_url TEXT,
+                            platform TEXT DEFAULT 'whatsapp',
+                            category TEXT DEFAULT 'other',
+                            status TEXT DEFAULT 'active',
+                            description TEXT,
+                            created_at TIMESTAMPTZ DEFAULT now()
+                        );
+                        
+                        ALTER TABLE agents ENABLE ROW LEVEL SECURITY;
+                        CREATE POLICY IF NOT EXISTS "Allow all" ON agents FOR ALL USING (true);
+                    `
+                });
+                
+                if (error) {
+                    log('❌ Erreur script: ' + error.message);
+                } else {
+                    log('✅ Table créée !');
+                }
+            } catch (err) {
+                log('❌ RPC non disponible, va dans SQL Editor de Supabase');
+            }
+        }
+        
+        // Auto-test au chargement
+        window.onload = function() {
+            log('🚀 Page chargée, test automatique...\n');
+            testConnection();
+        };
+    </script>
+</body>
+</html>
