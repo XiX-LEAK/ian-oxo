@@ -83,4 +83,4 @@ export const supabase = {
   }
 };
 
-export const isSupabaseConfigured = true; // Force l'utilisation de notre système
+export const isSupabaseConfigured = true; // Force l'utilisation de notre système// Force rebuild dim. 27 juil. 2025 15:35:21
