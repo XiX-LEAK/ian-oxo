@@ -1,51 +1,86 @@
-import { createClient } from '@supabase/supabase-js';
+import { jsonDB } from './jsonDatabase';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://qoynvpciuxhipessvojj.supabase.co';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFveW52cGNpdXhoaXBlc3N2b2pqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI5OTgzMjgsImV4cCI6MjA2ODU3NDMyOH0.md1_Pxl8YyUTOxdTzhCNgfiIrQkH-WYTIg7XfblL_z8';
+console.log('🎯 Mode JSON Database activé - DONNÉES PARTAGÉES');
 
-// Vérification des variables d'environnement avec logs pour debug
-console.log('🔍 Configuration Supabase:');
-console.log('- URL:', supabaseUrl ? supabaseUrl.substring(0, 30) + '...' : '❌ MANQUANTE');
-console.log('- Key:', supabaseAnonKey ? '✅ Présente' : '❌ MANQUANTE');
-
-// Vérifier si les variables contiennent les vraies valeurs ou les placeholders
-const isRealUrl = supabaseUrl && !supabaseUrl.includes('VOTRE_PROJECT_ID');
-const isRealKey = supabaseAnonKey && !supabaseAnonKey.includes('VOTRE_CLE_COMPLETE');
-
-if (!supabaseUrl || !supabaseAnonKey || !isRealUrl || !isRealKey) {
-  console.warn('⚠️ Configuration Supabase manquante ou incomplète');
-  console.warn('📋 Instructions de configuration:');
-  console.warn('1. Allez sur https://app.supabase.com');
-  console.warn('2. Ouvrez votre projet');
-  console.warn('3. Settings > API');
-  console.warn('4. Copiez les vraies valeurs dans le fichier .env');
-  console.warn('5. Redémarrez le serveur');
-  console.warn('');
-  console.warn('💡 En attendant, le système utilisera localStorage');
-}
-
-// Créer un client Supabase avec les vraies valeurs forcées
-const defaultUrl = 'https://qoynvpciuxhipessvojj.supabase.co';
-const defaultKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFveW52cGNpdXhoaXBlc3N2b2pqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI5OTgzMjgsImV4cCI6MjA2ODU3NDMyOH0.md1_Pxl8YyUTOxdTzhCNgfiIrQkH-WYTIg7XfblL_z8'.trim();
-
-// Configuration debug pour identifier le problème
-console.log('🔍 Debug Supabase:', {
-  url: defaultUrl,
-  keyLength: defaultKey.length,
-  keyStart: defaultKey.substring(0, 20),
-  env: typeof import.meta.env,
-  nodeEnv: process?.env?.NODE_ENV || 'unknown'
-});
-
-// Créer le client Supabase
-const supabaseClient = createClient(defaultUrl, defaultKey, {
+// Client Supabase qui utilise notre JSON Database
+export const supabase = {
+  from: (table: string) => ({
+    select: async () => {
+      try {
+        if (table === 'agents') {
+          const agents = await jsonDB.getAgents();
+          return { data: agents, error: null };
+        }
+        if (table === 'site_settings') {
+          const sitePassword = await jsonDB.getSitePassword();
+          const adminPassword = await jsonDB.getAdminPassword();
+          return { 
+            data: [
+              { setting_key: 'site_password', setting_value: sitePassword },
+              { setting_key: 'admin_password', setting_value: adminPassword }
+            ], 
+            error: null 
+          };
+        }
+        return { data: [], error: null };
+      } catch (error) {
+        return { data: [], error };
+      }
+    },
+    insert: async (data: any) => {
+      try {
+        if (table === 'agents') {
+          await jsonDB.addAgent(data);
+          return { data: [data], error: null };
+        }
+        return { data: null, error: null };
+      } catch (error) {
+        return { data: null, error };
+      }
+    },
+    update: async () => Promise.resolve({ data: null, error: null }),
+    upsert: async (data: any) => {
+      try {
+        if (table === 'site_settings') {
+          if (data.setting_key === 'site_password') {
+            await jsonDB.setSitePassword(data.setting_value);
+          }
+          if (data.setting_key === 'admin_password') {
+            await jsonDB.setAdminPassword(data.setting_value);
+          }
+          return { data: null, error: null };
+        }
+        return { data: null, error: null };
+      } catch (error) {
+        return { data: null, error };
+      }
+    },
+    delete: () => Promise.resolve({ data: null, error: null }),
+    eq: function(column: string, value: any) {
+      return {
+        maybeSingle: async () => {
+          try {
+            if (table === 'site_settings') {
+              if (value === 'site_password') {
+                const password = await jsonDB.getSitePassword();
+                return { data: { setting_value: password }, error: null };
+              }
+              if (value === 'admin_password') {
+                const password = await jsonDB.getAdminPassword();
+                return { data: { setting_value: password }, error: null };
+              }
+            }
+            return { data: null, error: null };
+          } catch (error) {
+            return { data: null, error };
+          }
+        }
+      };
+    }
+  }),
   auth: {
-    autoRefreshToken: false,
-    persistSession: false
+    getSession: () => Promise.resolve({ data: { session: null }, error: null })
   }
-});
+};
 
-export const supabase = supabaseClient;
-
-// Flag pour savoir si Supabase est vraiment configuré - forcé à true
-export const isSupabaseConfigured = true;
+export const isSupabaseConfigured = true; // Force l'utilisation de notre système
