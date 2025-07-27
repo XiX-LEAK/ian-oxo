@@ -120,9 +120,18 @@ class DatabaseService {
 
   async create(agentData: any): Promise<{ data: Agent[], error: any }> {
     try {
+      // Transformer les données pour correspondre à l'interface Agent interne
       const newAgent: Agent = {
-        ...agentData,
         id: Date.now().toString(),
+        name: agentData.name,
+        identifier: agentData.identifier,
+        phone_number: agentData.phone_number || agentData.phoneNumber,
+        email: agentData.email,
+        website_url: agentData.website_url || agentData.websiteUrl,
+        about: agentData.description || agentData.about_description || agentData.about,
+        internal_notes: agentData.internal_notes || agentData.notes,
+        platforms: agentData.platforms || [agentData.platform],
+        categories: agentData.categories || [agentData.category],
         created_at: new Date().toISOString()
       };
       
@@ -143,7 +152,20 @@ class DatabaseService {
         return { data: [], error: new Error('Agent non trouvé') };
       }
 
-      this.data.agents[index] = { ...this.data.agents[index], ...updates };
+      // Transformer les updates pour correspondre à l'interface Agent interne
+      const transformedUpdates = {
+        ...updates,
+        // Mapper les champs qui ont des noms différents
+        phone_number: updates.phone_number || updates.phoneNumber,
+        email: updates.email,
+        website_url: updates.website_url || updates.websiteUrl,
+        about: updates.description || updates.about_description || updates.about,
+        internal_notes: updates.internal_notes || updates.notes,
+        platforms: updates.platforms || [updates.platform],
+        categories: updates.categories || [updates.category]
+      };
+
+      this.data.agents[index] = { ...this.data.agents[index], ...transformedUpdates };
       this.saveData();
       console.log('✅ Agent modifié:', id);
       return { data: [this.data.agents[index]], error: null };
