@@ -183,119 +183,81 @@ export const useAgentStore = create<AgentStore>()(
         }
       },
 
-      // Add agent - VERSION ULTRA SIMPLE QUI MARCHE
+      // Add agent - VERSION SIMPLE LOCALE
       addAgent: async (agentData: CreateAgentRequest) => {
         set({ isLoading: true, error: null });
         
         try {
-          let newAgent: Agent;
+          console.log('➕ Création agent local...');
           
-          if (isSupabaseConfigured) {
-            // Créer dans Supabase - DONNÉES MINIMALES
-            console.log('➕ Création agent dans Supabase...');
-            const supabaseAgentData = {
-              name: agentData.name,
-              identifier: agentData.identifier,
-              phone_number: agentData.phoneNumber,
-              email: agentData.contactInfo?.email,
-              website_url: agentData.contactInfo?.websiteUrl,
-              platform: 'whatsapp',
-              status: 'active',
-              description: agentData.about || '',           // ✅ CORRECTION: À propos PUBLIC
-              about_description: agentData.about || '',     // ✅ Champ public "À propos"
-              internal_notes: agentData.notes || '',        // ✅ NOUVEAU: Notes privées admin
-              full_name: agentData.name,
-              specialties: agentData.specialties || [],
-              languages: agentData.languages || []
-            };
-            console.log('📤 Données envoyées à Supabase:', supabaseAgentData);
-            const createdSupabaseAgent = await agentServiceSimple.create(supabaseAgentData);
-            
-            if (!createdSupabaseAgent) {
-              throw new Error('Échec de création dans Supabase');
-            }
-            
-            // Agent simple pour affichage
-            newAgent = {
-              id: createdSupabaseAgent.id!,
-              name: createdSupabaseAgent.name,
-              identifier: createdSupabaseAgent.identifier,
-              phoneNumber: createdSupabaseAgent.phone_number,
+          // Créer avec agentServiceSimple
+          const simpleAgentData = {
+            name: agentData.name,
+            identifier: agentData.identifier,
+            phone_number: agentData.phoneNumber,
+            email: agentData.contactInfo?.email,
+            website_url: agentData.contactInfo?.websiteUrl,
+            platform: agentData.platform,
+            category: agentData.category,
+            status: 'active',
+            description: agentData.about || '',
+            about_description: agentData.about || '',
+            internal_notes: agentData.notes || ''
+          };
+          
+          const result = await agentServiceSimple.create(simpleAgentData);
+          
+          if (result.error) {
+            throw new Error('Échec de création: ' + result.error);
+          }
+          
+          // Transformer en Agent pour le store
+          const createdAgent = result.data[0];
+          const newAgent: Agent = {
+            id: createdAgent.id!,
+            name: createdAgent.name,
+            identifier: createdAgent.identifier,
+            phoneNumber: createdAgent.phone_number,
+            platform: agentData.platform,
+            platforms: agentData.platforms || [],
+            status: 'active',
+            rating: 0,
+            totalSales: 0,
+            lastActivity: new Date(),
+            about: agentData.about || '',
+            adminNotes: agentData.adminNotes || '',
+            isVerified: true,
+            languages: agentData.languages || [],
+            specialties: agentData.specialties || [],
+            contactInfo: {
               platform: agentData.platform,
-              platforms: agentData.platforms || [],
-              status: 'active' as any,
-              rating: 0,
-              totalSales: 0,
-              lastActivity: new Date(),
-              notes: agentData.notes || '',
-              about: agentData.about || '',
-              adminNotes: agentData.adminNotes || '',
-              isVerified: true,
-              languages: agentData.languages || [],
-              specialties: agentData.specialties || [],
-              contactInfo: {
-                platform: agentData.platform,
-                identifier: agentData.identifier,
-                phoneNumber: agentData.phoneNumber,
-                email: agentData.contactInfo?.email,
-                websiteUrl: agentData.contactInfo?.websiteUrl
-              },
-              stats: {
-                totalContacts: 0,
-                responseRate: 0,
-                avgResponseTime: 0,
-                successfulDeals: 0,
-                customerRating: 0
-              }
-            };
-            console.log('✅ Agent créé dans Supabase:', newAgent.id);
-          } else {
-            // Créer localement
-            newAgent = {
-              id: Date.now().toString(),
-              name: agentData.name,
               identifier: agentData.identifier,
               phoneNumber: agentData.phoneNumber,
-              platform: agentData.platform,
-              platforms: agentData.platforms || [],
-              status: 'active',
-              rating: 0,
-              totalSales: 0,
-              lastActivity: new Date(),
-              notes: agentData.notes,
-              about: agentData.about,
-              adminNotes: agentData.adminNotes,
-              isVerified: true,
-              languages: agentData.languages,
-              specialties: agentData.specialties,
-              contactInfo: {
-                platform: agentData.platform,
-                identifier: agentData.identifier,
-                phoneNumber: agentData.phoneNumber,
-                email: agentData.contactInfo.email,
-                websiteUrl: agentData.contactInfo.websiteUrl
-              },
-              stats: {
-                totalContacts: 0,
-                responseRate: 0,
-                avgResponseTime: 0,
-                successfulDeals: 0,
-                customerRating: 0
-              }
-            };
-          }
+              email: agentData.contactInfo?.email,
+              websiteUrl: agentData.contactInfo?.websiteUrl
+            },
+            stats: {
+              totalContacts: 0,
+              responseRate: 0,
+              avgResponseTime: 0,
+              successfulDeals: 0,
+              customerRating: 0
+            }
+          };
 
+          // Mettre à jour le store
           const currentAgents = get().agents;
           const updatedAgents = [...currentAgents, newAgent];
-          localStorage.setItem('oxo-agents', JSON.stringify(updatedAgents));
           
           set({ 
             agents: updatedAgents,
             filteredAgents: updatedAgents,
-            isLoading: false 
+            isLoading: false,
+            error: null
           });
           
           get().applyFilters();
+          console.log('✅ Agent ajouté avec succès:', newAgent.name);
           return true;
         } catch (error) {
           console.error('❌ Erreur ajout agent:', error);
