@@ -24,9 +24,9 @@ if (!supabaseUrl || !supabaseAnonKey || !isRealUrl || !isRealKey) {
   console.warn('💡 En attendant, le système utilisera localStorage');
 }
 
-// Créer un client Supabase même avec des valeurs par défaut
-const defaultUrl = supabaseUrl || 'https://placeholder.supabase.co';
-const defaultKey = supabaseAnonKey || 'placeholder-key';
+// Créer un client Supabase avec les vraies valeurs forcées
+const defaultUrl = 'https://qoynvpciuxhipessvojj.supabase.co';
+const defaultKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFveW52cGNpdXhoaXBlc3N2b2pqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI5OTgzMjgsImV4cCI6MjA2ODU3NDMyOH0.md1_Pxl8YyUTOxdTzhCNgfiIrQkH-WYTIg7XfblL_z8';
 
 export const supabase = createClient(defaultUrl, defaultKey, {
   auth: {
@@ -36,5 +36,5 @@ export const supabase = createClient(defaultUrl, defaultKey, {
   }
 });
 
-// Flag pour savoir si Supabase est vraiment configuré
-export const isSupabaseConfigured = isRealUrl && isRealKey;
+// Flag pour savoir si Supabase est vraiment configuré - forcé à true
+export const isSupabaseConfigured = true;
