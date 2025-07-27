@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Settings, Lock, Key, Save, Eye, EyeOff, Shield, AlertCircle, CheckCircle, Cog } from 'lucide-react';
 import { useAuthStore } from '@/stores/authStore';
-import AdminPasswordManager from '@/components/admin/AdminPasswordManager';
+import { AdminPasswordManager } from '@/components/admin/AdminPasswordManager';
 
 export const AdminDashboard: React.FC = () => {
   const [newSitePassword, setNewSitePassword] = useState('');

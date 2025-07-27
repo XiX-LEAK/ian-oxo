@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Lock, Eye, EyeOff, CheckCircle, AlertCircle } from 'lucide-react';
-import { supabase } from '@/utils/supabase';
+import { databaseService } from '@/services/databaseService';
 
 export const PasswordReset: React.FC = () => {
   const [newPassword, setNewPassword] = useState('');
@@ -14,8 +14,7 @@ export const PasswordReset: React.FC = () => {
   // Vérifier si on a un token de réinitialisation dans l'URL
   useEffect(() => {
     const handlePasswordReset = async () => {
-      const { data, error } = await supabase.auth.getSession();
-      console.log('Session pour reset:', { data, error });
+      console.log('Mode local - pas de session à vérifier');
     };
 
     handlePasswordReset();
@@ -46,18 +45,16 @@ export const PasswordReset: React.FC = () => {
     }
 
     try {
-      const { error } = await supabase.auth.updateUser({
-        password: newPassword
-      });
+      const success = databaseService.setSitePassword(newPassword);
 
-      if (error) {
-        console.error('Erreur mise à jour mot de passe:', error);
-        setError('Erreur lors de la mise à jour du mot de passe: ' + error.message);
-      } else {
+      if (success) {
         setSuccess(true);
+        console.log('✅ Mot de passe mis à jour avec succès');
         setTimeout(() => {
           window.location.href = '/';
         }, 3000);
+      } else {
+        setError('Erreur lors de la mise à jour du mot de passe');
       }
     } catch (error: any) {
       console.error('Erreur:', error);

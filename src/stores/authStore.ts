@@ -2,7 +2,6 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { AuthState, User } from '@/types';
 import { SiteSettingsService } from '@/utils/siteSettings';
-import { PasswordLoggingService } from '@/services/supabaseService';
 
 interface AuthStore extends AuthState {
   // État
@@ -158,14 +157,7 @@ export const useAuthStore = create<AuthStore>()(
             });
             
             // Enregistrer le changement dans les logs
-            await PasswordLoggingService.logPasswordChange({
-              changeType: 'site_password',
-              adminUserId: currentUser?.id,
-              adminEmail: currentUser?.email,
-              success: true,
-              notes: 'Changement réussi via interface admin',
-              previousPasswordHash: btoa(oldPassword) // Simple encoding pour l'exemple
-            });
+            // Logging retiré - mode local
             
             console.log('✅ Mot de passe du site mis à jour dans Supabase et localStorage + log enregistré');
             return true;
@@ -176,13 +168,7 @@ export const useAuthStore = create<AuthStore>()(
           console.error('❌ Erreur mise à jour mot de passe site:', error);
           
           // Enregistrer l'échec dans les logs
-          await PasswordLoggingService.logPasswordChange({
-            changeType: 'site_password',
-            adminUserId: currentUser?.id,
-            adminEmail: currentUser?.email,
-            success: false,
-            notes: `Erreur: ${error}`
-          });
+          // Logging retiré - mode local
           
           // Fallback: sauvegarder seulement en localStorage
           localStorage.setItem('oxo-site-password', newPassword);
@@ -217,14 +203,7 @@ export const useAuthStore = create<AuthStore>()(
             set({ isLoading: false, error: null });
             
             // Enregistrer le changement dans les logs
-            await PasswordLoggingService.logPasswordChange({
-              changeType: 'admin_password',
-              adminUserId: currentUser?.id,
-              adminEmail: currentUser?.email,
-              success: true,
-              notes: 'Changement réussi via interface admin',
-              previousPasswordHash: btoa(oldPassword) // Simple encoding pour l'exemple
-            });
+            // Logging retiré - mode local
             
             console.log('✅ Mot de passe admin mis à jour dans Supabase et localStorage + log enregistré');
             return true;
@@ -235,13 +214,7 @@ export const useAuthStore = create<AuthStore>()(
           console.error('❌ Erreur mise à jour mot de passe admin:', error);
           
           // Enregistrer l'échec dans les logs
-          await PasswordLoggingService.logPasswordChange({
-            changeType: 'admin_password',
-            adminUserId: currentUser?.id,
-            adminEmail: currentUser?.email,
-            success: false,
-            notes: `Erreur: ${error}`
-          });
+          // Logging retiré - mode local
           
           // Fallback: sauvegarder seulement en localStorage
           localStorage.setItem('oxo-admin-password', newPassword);

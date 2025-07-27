@@ -1,9 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { Agent, AgentFilters, CreateAgentRequest, UpdateAgentRequest, Platform, AgentCategory, AgentStatus } from '@/types/agent';
-import { SimpleAgentService } from '@/services/agentServiceSimple';
-import { isSupabaseConfigured } from '@/utils/supabase';
-import type { Agent as SupabaseAgent } from '@/services/supabaseService';
+import { agentServiceSimple } from '@/services/agentServiceSimple';
 
 interface AgentStore {
   // State
@@ -124,7 +122,7 @@ export const useAgentStore = create<AgentStore>()(
           if (isSupabaseConfigured) {
             // Charger depuis Supabase
             console.log('🔄 Chargement des agents depuis Supabase...');
-            const supabaseAgents = await SimpleAgentService.getAll();
+            const supabaseAgents = await agentServiceSimple.getAll();
             agents = supabaseAgents.map(transformSupabaseAgent);
             console.log(`✅ ${agents.length} agents chargés depuis Supabase`);
             
@@ -211,7 +209,7 @@ export const useAgentStore = create<AgentStore>()(
               languages: agentData.languages || []
             };
             console.log('📤 Données envoyées à Supabase:', supabaseAgentData);
-            const createdSupabaseAgent = await SimpleAgentService.create(supabaseAgentData);
+            const createdSupabaseAgent = await agentServiceSimple.create(supabaseAgentData);
             
             if (!createdSupabaseAgent) {
               throw new Error('Échec de création dans Supabase');
@@ -333,7 +331,7 @@ export const useAgentStore = create<AgentStore>()(
               languages: agentData.languages || []
             };
             console.log('📤 Données envoyées:', supabaseAgentData);
-            const updatedSupabaseAgent = await SimpleAgentService.update(agentData.id, supabaseAgentData);
+            const updatedSupabaseAgent = await agentServiceSimple.update(agentData.id, supabaseAgentData);
             
             if (!updatedSupabaseAgent) {
               throw new Error('Échec de mise à jour dans Supabase');
@@ -395,7 +393,7 @@ export const useAgentStore = create<AgentStore>()(
           if (isSupabaseConfigured) {
             // Supprimer de Supabase
             console.log('🗑️ Suppression agent dans Supabase...');
-            const success = await SimpleAgentService.delete(id);
+            const success = await agentServiceSimple.delete(id);
             
             if (!success) {
               throw new Error('Échec de suppression dans Supabase');
