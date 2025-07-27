@@ -1,6 +1,6 @@
-import { jsonDB } from './jsonDatabase';
+import { gistDB } from './githubGistDB';
 
-console.log('🎯 Mode JSON Database activé - DONNÉES PARTAGÉES');
+console.log('🚀 Mode GitHub Gist activé - MAGIE PURE !');
 
 // Client Supabase qui utilise notre JSON Database
 export const supabase = {
@@ -8,12 +8,12 @@ export const supabase = {
     select: async () => {
       try {
         if (table === 'agents') {
-          const agents = await jsonDB.getAgents();
+          const agents = gistDB.getAgents();
           return { data: agents, error: null };
         }
         if (table === 'site_settings') {
-          const sitePassword = await jsonDB.getSitePassword();
-          const adminPassword = await jsonDB.getAdminPassword();
+          const sitePassword = gistDB.getSitePassword();
+          const adminPassword = gistDB.getAdminPassword();
           return { 
             data: [
               { setting_key: 'site_password', setting_value: sitePassword },
@@ -30,7 +30,7 @@ export const supabase = {
     insert: async (data: any) => {
       try {
         if (table === 'agents') {
-          await jsonDB.addAgent(data);
+          await gistDB.addAgent(data);
           return { data: [data], error: null };
         }
         return { data: null, error: null };
@@ -43,10 +43,10 @@ export const supabase = {
       try {
         if (table === 'site_settings') {
           if (data.setting_key === 'site_password') {
-            await jsonDB.setSitePassword(data.setting_value);
+            await gistDB.setSitePassword(data.setting_value);
           }
           if (data.setting_key === 'admin_password') {
-            await jsonDB.setAdminPassword(data.setting_value);
+            await gistDB.setAdminPassword(data.setting_value);
           }
           return { data: null, error: null };
         }
@@ -62,11 +62,11 @@ export const supabase = {
           try {
             if (table === 'site_settings') {
               if (value === 'site_password') {
-                const password = await jsonDB.getSitePassword();
+                const password = gistDB.getSitePassword();
                 return { data: { setting_value: password }, error: null };
               }
               if (value === 'admin_password') {
-                const password = await jsonDB.getAdminPassword();
+                const password = gistDB.getAdminPassword();
                 return { data: { setting_value: password }, error: null };
               }
             }
