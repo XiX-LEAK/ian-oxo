@@ -1,4 +1,4 @@
-import { databaseService } from '../services/databaseService';
+import { firebaseServiceSync } from '../services/firebaseServiceSync';
 
 export interface SiteSetting {
   id: string;
@@ -14,10 +14,10 @@ export class SiteSettingsService {
   static async getSetting(key: string): Promise<string | null> {
     try {
       if (key === 'site_password') {
-        return databaseService.getSitePassword();
+        return firebaseServiceSync.getSitePassword();
       }
       if (key === 'admin_password') {
-        return databaseService.getAdminPassword();
+        return firebaseServiceSync.getAdminPassword();
       }
       return null;
     } catch (error) {
@@ -30,10 +30,10 @@ export class SiteSettingsService {
   static async setSetting(key: string, value: string): Promise<boolean> {
     try {
       if (key === 'site_password') {
-        return databaseService.setSitePassword(value);
+        return await firebaseServiceSync.setSitePassword(value);
       }
       if (key === 'admin_password') {
-        return databaseService.setAdminPassword(value);
+        return await firebaseServiceSync.setAdminPassword(value);
       }
       console.log(`✅ Paramètre ${key} sauvegardé:`, value);
       return true;
@@ -47,8 +47,8 @@ export class SiteSettingsService {
   static async getAllSettings(): Promise<Record<string, string>> {
     try {
       return {
-        'site_password': databaseService.getSitePassword(),
-        'admin_password': databaseService.getAdminPassword()
+        'site_password': firebaseServiceSync.getSitePassword(),
+        'admin_password': firebaseServiceSync.getAdminPassword()
       };
     } catch (error) {
       console.error('Erreur récupération de tous les paramètres:', error);
@@ -58,22 +58,22 @@ export class SiteSettingsService {
 
   // Récupérer le mot de passe du site
   static async getSitePassword(): Promise<string> {
-    return databaseService.getSitePassword();
+    return firebaseServiceSync.getSitePassword();
   }
 
   // Mettre à jour le mot de passe du site
   static async setSitePassword(newPassword: string): Promise<boolean> {
-    return databaseService.setSitePassword(newPassword);
+    return await firebaseServiceSync.setSitePassword(newPassword);
   }
 
   // Récupérer le mot de passe admin
   static async getAdminPassword(): Promise<string> {
-    return databaseService.getAdminPassword();
+    return firebaseServiceSync.getAdminPassword();
   }
 
   // Mettre à jour le mot de passe admin
   static async setAdminPassword(newPassword: string): Promise<boolean> {
-    return databaseService.setAdminPassword(newPassword);
+    return await firebaseServiceSync.setAdminPassword(newPassword);
   }
 
   // Initialiser les paramètres par défaut si ils n'existent pas
