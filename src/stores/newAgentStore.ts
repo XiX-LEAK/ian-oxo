@@ -1,6 +1,7 @@
 // 🎯 NOUVEAU STORE AGENTS - ULTRA SIMPLE QUI MARCHE !
 import { create } from 'zustand';
-import { newAgentService, type SimpleAgentData } from '@/services/newAgentService';
+import { firebaseService } from '@/services/firebaseService';
+import { type SimpleAgentData } from '@/services/newAgentService';
 
 interface NewAgentStore {
   // État
@@ -9,10 +10,10 @@ interface NewAgentStore {
   error: string | null;
 
   // Actions
-  loadAgents: () => void;
-  addAgent: (agentData: Omit<SimpleAgentData, 'id' | 'created'>) => boolean;
-  updateAgent: (id: string, updates: Partial<SimpleAgentData>) => boolean;
-  deleteAgent: (id: string) => boolean;
+  loadAgents: () => Promise<void>;
+  addAgent: (agentData: Omit<SimpleAgentData, 'id' | 'created'>) => Promise<boolean>;
+  updateAgent: (id: string, updates: Partial<SimpleAgentData>) => Promise<boolean>;
+  deleteAgent: (id: string) => Promise<boolean>;
   clearError: () => void;
   clearAll: () => boolean;
 }
@@ -24,83 +25,95 @@ export const useNewAgentStore = create<NewAgentStore>((set, get) => ({
   error: null,
 
   // 📋 CHARGER TOUS LES AGENTS
-  loadAgents: () => {
-    console.log('📋 Chargement agents...');
+  loadAgents: async () => {
+    console.log('📋 Chargement agents depuis Firebase...');
     try {
       set({ isLoading: true, error: null });
-      const agents = newAgentService.getAll();
-      set({ agents, isLoading: false });
-      console.log('✅ Agents chargés:', agents.length);
+      const result = await firebaseService.getAll();
+      if (result.error) {
+        throw new Error('Erreur Firebase');
+      }
+      console.log('✅ Agents chargés depuis Firebase:', result.data.length);
+      set({ agents: result.data, isLoading: false });
     } catch (error) {
-      console.error('❌ Erreur chargement:', error);
-      set({ error: 'Erreur de chargement', isLoading: false });
+      console.error('❌ Erreur chargement Firebase:', error);
+      set({ error: 'Erreur lors du chargement des agents', isLoading: false });
     }
   },
 
   // ➕ AJOUTER UN AGENT
-  addAgent: (agentData) => {
-    console.log('➕ Ajout agent:', agentData.name);
+  addAgent: async (agentData) => {
+    console.log('➕ Ajout agent via Firebase:', agentData.name);
     try {
       set({ isLoading: true, error: null });
-      const newAgent = newAgentService.create(agentData);
+      const result = await firebaseService.create(agentData);
       
-      if (newAgent) {
-        const agents = newAgentService.getAll();
-        set({ agents, isLoading: false });
-        console.log('✅ Agent ajouté avec succès');
-        return true;
-      } else {
-        set({ error: 'Erreur lors de l\'ajout', isLoading: false });
-        return false;
+      if (result.error) {
+        throw new Error('Erreur Firebase');
       }
+      
+      // Recharger tous les agents pour la sync
+      const allAgents = await firebaseService.getAll();
+      if (!allAgents.error) {
+        set({ agents: allAgents.data, isLoading: false });
+      }
+      
+      console.log('✅ Agent ajouté avec succès via Firebase');
+      return true;
     } catch (error) {
-      console.error('❌ Erreur ajout:', error);
+      console.error('❌ Erreur ajout Firebase:', error);
       set({ error: 'Erreur lors de l\'ajout', isLoading: false });
       return false;
     }
   },
 
   // ✏️ MODIFIER UN AGENT
-  updateAgent: (id, updates) => {
-    console.log('✏️ Modification agent:', id);
+  updateAgent: async (id, updates) => {
+    console.log('✏️ Modification agent via Firebase:', id);
     try {
       set({ isLoading: true, error: null });
-      const updatedAgent = newAgentService.update(id, updates);
+      const result = await firebaseService.update(id, updates);
       
-      if (updatedAgent) {
-        const agents = newAgentService.getAll();
-        set({ agents, isLoading: false });
-        console.log('✅ Agent modifié avec succès');
-        return true;
-      } else {
-        set({ error: 'Erreur lors de la modification', isLoading: false });
-        return false;
+      if (result.error) {
+        throw new Error('Erreur Firebase');
       }
+      
+      // Recharger tous les agents pour la sync
+      const allAgents = await firebaseService.getAll();
+      if (!allAgents.error) {
+        set({ agents: allAgents.data, isLoading: false });
+      }
+      
+      console.log('✅ Agent modifié avec succès via Firebase');
+      return true;
     } catch (error) {
-      console.error('❌ Erreur modification:', error);
+      console.error('❌ Erreur modification Firebase:', error);
       set({ error: 'Erreur lors de la modification', isLoading: false });
       return false;
     }
   },
 
   // 🗑️ SUPPRIMER UN AGENT
-  deleteAgent: (id) => {
-    console.log('🗑️ Suppression agent:', id);
+  deleteAgent: async (id) => {
+    console.log('🗑️ Suppression agent via Firebase:', id);
     try {
       set({ isLoading: true, error: null });
-      const success = newAgentService.delete(id);
+      const result = await firebaseService.delete(id);
       
-      if (success) {
-        const agents = newAgentService.getAll();
-        set({ agents, isLoading: false });
-        console.log('✅ Agent supprimé avec succès');
-        return true;
-      } else {
-        set({ error: 'Erreur lors de la suppression', isLoading: false });
-        return false;
+      if (result.error) {
+        throw new Error('Erreur Firebase');
       }
+      
+      // Recharger tous les agents pour la sync
+      const allAgents = await firebaseService.getAll();
+      if (!allAgents.error) {
+        set({ agents: allAgents.data, isLoading: false });
+      }
+      
+      console.log('✅ Agent supprimé avec succès via Firebase');
+      return true;
     } catch (error) {
-      console.error('❌ Erreur suppression:', error);
+      console.error('❌ Erreur suppression Firebase:', error);
       set({ error: 'Erreur lors de la suppression', isLoading: false });
       return false;
     }
