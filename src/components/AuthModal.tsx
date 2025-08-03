@@ -107,7 +107,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          className="fixed inset-0 z-50 flex items-start justify-center p-4 overflow-y-auto"
           variants={overlayVariants}
           initial="hidden"
           animate="visible"
@@ -121,7 +121,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           
           {/* Modal */}
           <motion.div
-            className="relative w-full max-w-md"
+            className="relative w-full max-w-md my-8 min-h-0"
             variants={modalVariants}
             initial="hidden"
             animate="visible"
