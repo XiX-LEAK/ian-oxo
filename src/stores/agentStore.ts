@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { Agent, AgentFilters, CreateAgentRequest, UpdateAgentRequest, Platform, AgentCategory, AgentStatus } from '@/types/agent';
 import { agentServiceSimple } from '@/services/agentServiceSimple';
-import { databaseService } from '@/services/databaseService';
+import { firebaseService } from '@/services/firebaseService';
 
 interface AgentStore {
   // State
@@ -120,12 +120,15 @@ export const useAgentStore = create<AgentStore>()(
         try {
           let agents: Agent[] = [];
           
-          if (isSupabaseConfigured) {
-            // Charger depuis Supabase
-            console.log('🔄 Chargement des agents depuis Supabase...');
-            const supabaseAgents = await agentServiceSimple.getAll();
-            agents = supabaseAgents.map(transformSupabaseAgent);
-            console.log(`✅ ${agents.length} agents chargés depuis Supabase`);
+          try {
+            // Charger depuis Firebase
+            console.log('🔄 Chargement des agents depuis Firebase...');
+            const result = await firebaseService.getAll();
+            if (result.error) {
+              throw new Error('Erreur Firebase');
+            }
+            agents = result.data;
+            console.log(`✅ ${agents.length} agents chargés depuis Firebase`);
             
             // Charger les notes locales et les fusionner
             const localNotes = localStorage.getItem('oxo-agent-notes');
@@ -141,9 +144,9 @@ export const useAgentStore = create<AgentStore>()(
             
             // Synchroniser avec localStorage pour le cache
             localStorage.setItem('oxo-agents', JSON.stringify(agents));
-          } else {
+          } catch (firebaseError) {
             // Fallback vers localStorage
-            console.log('⚠️ Supabase non configuré, utilisation de localStorage');
+            console.log('⚠️ Firebase non accessible, utilisation de localStorage');
             const stored = localStorage.getItem('oxo-agents');
             agents = stored ? JSON.parse(stored) : [];
             console.log(`📱 ${agents.length} agents chargés depuis localStorage`);
@@ -207,7 +210,7 @@ export const useAgentStore = create<AgentStore>()(
           
           console.log('📤 Create data préparé:', createData);
           
-          const result = await databaseService.create(createData);
+          const result = await firebaseService.create(createData);
           
           console.log('📥 Résultat création:', result);
           
@@ -297,7 +300,7 @@ export const useAgentStore = create<AgentStore>()(
           
           console.log('📤 Update data préparé:', updateData);
           
-          const result = await databaseService.update(agentData.id, updateData);
+          const result = await firebaseService.update(agentData.id, updateData);
           
           console.log('📥 Résultat databaseService:', result);
           
@@ -361,7 +364,7 @@ export const useAgentStore = create<AgentStore>()(
           console.log('🆔 ID à supprimer:', id);
           
           // Supprimer directement avec databaseService
-          const result = await databaseService.delete(id);
+          const result = await firebaseService.delete(id);
           
           console.log('📥 Résultat suppression:', result);
           

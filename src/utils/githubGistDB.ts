@@ -28,8 +28,8 @@ const DEFAULT_DATA: GistData = {
 };
 
 class GitHubGistDB {
-  private gistId = 'a1b2c3d4e5f6g7h8i9j0'; // ID du Gist (je vais le créer)
-  private gistUrl = `https://api.github.com/gists/${this.gistId}`;
+  private gistId = ''; // Sera configuré dynamiquement
+  private gistUrl = '';
   private fileName = 'oxo-database.json';
   private localData: GistData = DEFAULT_DATA;
   private cache: GistData = DEFAULT_DATA;
@@ -37,9 +37,30 @@ class GitHubGistDB {
   private syncInterval = 5000; // Sync toutes les 5 secondes
 
   constructor() {
+    this.initGistConfig();
     this.loadFromLocal();
     this.startAutoSync();
     console.log('✅ GitHub Gist DB initialisé');
+  }
+
+  private initGistConfig() {
+    // Récupérer l'ID depuis les variables d'environnement ou localStorage
+    this.gistId = import.meta.env.VITE_GITHUB_GIST_ID || localStorage.getItem('oxo-gist-id') || '';
+    this.gistUrl = this.gistId ? `https://api.github.com/gists/${this.gistId}` : '';
+    
+    if (!this.gistId) {
+      console.log('⚠️ Gist ID non configuré, mode localStorage uniquement');
+    } else {
+      console.log('🔗 Gist configuré:', this.gistId);
+    }
+  }
+
+  // Méthode pour configurer le Gist ID dynamiquement
+  setGistId(id: string) {
+    this.gistId = id;
+    this.gistUrl = `https://api.github.com/gists/${id}`;
+    localStorage.setItem('oxo-gist-id', id);
+    console.log('🔗 Gist ID configuré:', id);
   }
 
   // 💾 GESTION CACHE LOCAL
@@ -67,6 +88,10 @@ class GitHubGistDB {
 
   // 🌐 SYNCHRONISATION AVEC GIST
   private async syncWithGist(): Promise<boolean> {
+    if (!this.gistId || !this.gistUrl) {
+      return false;
+    }
+
     try {
       // Récupérer les données depuis le Gist
       const response = await fetch(this.gistUrl, {

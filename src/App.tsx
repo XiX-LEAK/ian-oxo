@@ -220,7 +220,7 @@ function App() {
       <main className="pt-6 relative z-10">
         {!hasAccessToSite ? (
           // Landing Page pour utilisateurs sans accès au site
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative min-h-screen md:min-h-0 overflow-y-auto md:overflow-visible">
             {/* Éléments flottants décoratifs */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
               {[...Array(8)].map((_, i) => (
@@ -247,10 +247,10 @@ function App() {
               ))}
             </div>
 
-            <ScrollReveal variant="fadeInUp" className="text-center py-20 relative z-10">
+            <ScrollReveal variant="fadeInUp" className="text-center py-10 md:py-20 relative z-10">
               {/* Logo principal avec animations avancées */}
               <motion.div 
-                className="w-32 h-32 bg-gradient-to-br from-orange-500 via-red-500 to-purple-600 rounded-3xl flex items-center justify-center mb-12 mx-auto relative overflow-hidden"
+                className="w-24 h-24 md:w-32 md:h-32 bg-gradient-to-br from-orange-500 via-red-500 to-purple-600 rounded-3xl flex items-center justify-center mb-8 md:mb-12 mx-auto relative overflow-hidden"
                 whileHover={{ 
                   scale: 1.1,
                   rotate: [0, 5, -5, 0],
@@ -265,7 +265,7 @@ function App() {
                   rotateY: { duration: 6, repeat: Infinity, ease: "easeInOut" }
                 }}
               >
-                <svg className="w-16 h-16 text-white relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-12 h-12 md:w-16 md:h-16 text-white relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
                 
@@ -303,7 +303,7 @@ function App() {
               
               {/* Titre avec effet de texte liquide */}
               <motion.h1 
-                className="text-6xl md:text-8xl font-bold mb-8 relative"
+                className="text-4xl md:text-6xl lg:text-8xl font-bold mb-6 md:mb-8 relative"
                 initial={{ opacity: 0, y: 50 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3, duration: 0.8 }}
@@ -351,7 +351,7 @@ function App() {
               
               {/* Description avec effet typewriter */}
               <motion.div
-                className="text-2xl text-gray-600 mb-16 max-w-3xl mx-auto leading-relaxed"
+                className="text-lg md:text-2xl text-gray-600 mb-8 md:mb-16 max-w-3xl mx-auto leading-relaxed px-4"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6, duration: 0.8 }}
@@ -376,7 +376,7 @@ function App() {
               </motion.div>
 
               {/* Blocs de fonctionnalités avec animations conservées mais design original */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-20">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mt-12 md:mt-20 px-4">
                 {[
                   {
                     icon: (
@@ -639,26 +639,6 @@ function App() {
                 exit={{ opacity: 0, x: 20 }}
                 transition={{ duration: 0.4, type: "spring", stiffness: 100 }}
               >
-                <ScrollReveal variant="fadeInUp">
-                  <div className="mb-8">
-                    <motion.h1 
-                      className="text-4xl font-bold text-gray-900 mb-3"
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                    >
-                      Base d'agents
-                    </motion.h1>
-                    <motion.p 
-                      className="text-gray-600 text-lg"
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.1 }}
-                    >
-                      Découvrez et contactez des agents vérifiés sur différentes plateformes.
-                    </motion.p>
-                  </div>
-                </ScrollReveal>
-
                 <ScrollReveal variant="slideRotate" delay={0.2}>
                   <NewAgentList />
                 </ScrollReveal>

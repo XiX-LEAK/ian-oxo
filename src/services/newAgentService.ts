@@ -8,7 +8,6 @@ export interface SimpleAgentData {
   phoneNumber?: string;
   email?: string;
   websiteUrl?: string;
-  platform: string;
   category: string;
   about?: string;
   notes?: string;
@@ -48,6 +47,7 @@ class NewAgentService {
     try {
       const newAgent: SimpleAgentData = {
         ...agentData,
+        identifier: agentData.identifier || agentData.name.toLowerCase().replace(/\s+/g, ''),
         id: Date.now().toString(),
         created: new Date().toISOString()
       };

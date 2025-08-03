@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Lock, Eye, EyeOff, CheckCircle, AlertCircle, X } from 'lucide-react';
-import { databaseService } from '@/services/databaseService';
+import { firebaseServiceSync } from '@/services/firebaseServiceSync';
 import { useAuthStore } from '@/stores/authStore';
 
 interface AdminPasswordManagerProps {
@@ -50,8 +50,8 @@ export const AdminPasswordManager: React.FC<AdminPasswordManagerProps> = ({
 
     try {
       // Vérifier le mot de passe actuel
-      const currentSitePassword = databaseService.getSitePassword();
-      const currentAdminPassword = databaseService.getAdminPassword();
+      const currentSitePassword = firebaseServiceSync.getSitePassword();
+      const currentAdminPassword = firebaseServiceSync.getAdminPassword();
       
       if (passwordType === 'site' && currentPassword !== currentSitePassword) {
         setMessage({ type: 'error', text: 'Mot de passe actuel incorrect' });
