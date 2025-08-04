@@ -209,12 +209,14 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-orange-50/30 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-orange-50/30 relative">
       {/* Timer de session */}
       <SessionTimer />
       
-      {/* Arrière-plan de particules */}
-      <ParticleBackground particleCount={40} animated={true} />
+      {/* Arrière-plan de particules avec flou continu */}
+      <div className="fixed inset-0 z-0">
+        <ParticleBackground particleCount={40} animated={true} />
+      </div>
       
       <Header 
         currentView={currentView}
@@ -224,7 +226,7 @@ function App() {
       <main className="pt-6 relative z-10">
         {!hasAccessToSite ? (
           // Landing Page pour utilisateurs sans accès au site
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative min-h-screen md:min-h-0 overflow-y-auto md:overflow-visible">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative min-h-screen">
             {/* Éléments flottants décoratifs */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
               {[...Array(8)].map((_, i) => (
@@ -718,7 +720,9 @@ function App() {
       {/* Footer moderne avec animations */}
       <ScrollReveal variant="fadeInUp" className="mt-20">
         <footer className="glass-effect border-t border-gray-200/50 relative overflow-hidden">
-          <ParticleBackground particleCount={20} animated={true} />
+          <div className="absolute inset-0 z-0">
+            <ParticleBackground particleCount={20} animated={true} />
+          </div>
           
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-10">
             <div className="text-center">
