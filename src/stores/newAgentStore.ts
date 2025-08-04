@@ -64,8 +64,24 @@ export const useNewAgentStore = create<NewAgentStore>((set, get) => ({
     try {
       set({ isLoading: true, error: null });
       
+      // Transformer les données pour Firebase
+      const firebaseData = {
+        name: agentData.name,
+        identifier: agentData.identifier,
+        phoneNumber: agentData.phoneNumber,
+        email: agentData.email,
+        websiteUrl: agentData.websiteUrl,
+        about: agentData.about,
+        notes: agentData.notes, // Ça devient internal_notes dans Firebase  
+        platforms: agentData.platforms || ['whatsapp'],
+        categories: agentData.categories || ['other'],
+        languages: agentData.languages || [],
+        specialties: agentData.specialties || []
+      };
+
       console.log('🔥 APPEL firebaseService.create...');
-      const result = await firebaseService.create(agentData);
+      console.log('📤 Données transformées pour Firebase:', firebaseData);
+      const result = await firebaseService.create(firebaseData);
       console.log('📥 Résultat firebaseService.create:', result);
       
       if (result.error) {
@@ -99,8 +115,24 @@ export const useNewAgentStore = create<NewAgentStore>((set, get) => ({
     try {
       set({ isLoading: true, error: null });
       
+      // Transformer les données pour Firebase
+      const firebaseUpdates = {
+        name: updates.name,
+        identifier: updates.identifier,
+        phoneNumber: updates.phoneNumber,
+        email: updates.email,
+        websiteUrl: updates.websiteUrl,
+        about: updates.about,
+        notes: updates.notes, // Ça devient internal_notes dans Firebase
+        platforms: updates.platforms,
+        categories: updates.categories,
+        languages: updates.languages,
+        specialties: updates.specialties
+      };
+
       console.log('🔥 APPEL firebaseService.update...');
-      const result = await firebaseService.update(id, updates);
+      console.log('📤 Updates transformées pour Firebase:', firebaseUpdates);
+      const result = await firebaseService.update(id, firebaseUpdates);
       console.log('📥 Résultat firebaseService.update:', result);
       
       if (result.error) {

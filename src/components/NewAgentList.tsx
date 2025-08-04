@@ -29,12 +29,12 @@ export const NewAgentList: React.FC = () => {
   const AgentForm = () => {
     const [formData, setFormData] = useState({
       name: editingAgent?.name || '',
-      phoneNumber: editingAgent?.phoneNumber || '',
+      phoneNumber: editingAgent?.phone_number || editingAgent?.phoneNumber || '',
       email: editingAgent?.email || '',
-      websiteUrl: editingAgent?.websiteUrl || '',
+      websiteUrl: editingAgent?.website_url || editingAgent?.websiteUrl || '',
       category: editingAgent?.category || 'business',
       about: editingAgent?.about || '',
-      notes: editingAgent?.notes || ''
+      notes: editingAgent?.internal_notes || editingAgent?.notes || ''
     });
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -466,10 +466,25 @@ export const NewAgentList: React.FC = () => {
                     </div>
                   )}
 
+                  {/* NOTES INTERNES - ADMIN SEULEMENT */}
+                  {mode === 'admin' && (agent.internal_notes || agent.notes) && (
+                    <div className="mb-4 p-3 bg-yellow-50/80 border-l-4 border-yellow-400 rounded-r-lg backdrop-blur-sm">
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
+                        <span className="text-xs font-semibold text-yellow-700 uppercase tracking-wide">
+                          Notes internes
+                        </span>
+                      </div>
+                      <p className="text-yellow-800 text-sm leading-relaxed">
+                        {agent.internal_notes || agent.notes}
+                      </p>
+                    </div>
+                  )}
+
                   {/* DATE */}
                   <div className="flex items-center gap-2 text-xs text-gray-500">
                     <Clock className="w-3 h-3" />
-                    Ajouté le {new Date(agent.created).toLocaleDateString('fr-FR')}
+                    Ajouté le {new Date(agent.created_at || agent.created).toLocaleDateString('fr-FR')}
                   </div>
                 </div>
 
