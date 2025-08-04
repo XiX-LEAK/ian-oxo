@@ -4,14 +4,15 @@ console.log('🚀 Firebase Service - SYSTÈME GLOBAL !');
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, setDoc, getDoc } from 'firebase/firestore';
 
-// 🔥 VOTRE VRAIE CONFIG FIREBASE !
+// 🔥 VOTRE VRAIE CONFIG FIREBASE COMPLETE !
 const firebaseConfig = {
   apiKey: "AIzaSyBLVDsQkjsazFY12l74O8CJ06a_C0z-Los",
   authDomain: "oxo-ultimate.firebaseapp.com",
   projectId: "oxo-ultimate",
   storageBucket: "oxo-ultimate.firebasestorage.app",
   messagingSenderId: "929628007088",
-  appId: "1:929628007088:web:d2b9c790e1d89145352975"
+  appId: "1:929628007088:web:d2b9c790e1d89145352975",
+  measurementId: "G-QZLM6D58DP"
 };
 
 // Initialize Firebase
@@ -112,86 +113,187 @@ class FirebaseService {
 
   async create(agentData: any): Promise<{ data: Agent[], error: any }> {
     try {
-      const newAgent = {
-        name: agentData.name,
-        identifier: agentData.identifier,
-        phone_number: agentData.phone_number || agentData.phoneNumber,
-        email: agentData.email,
-        website_url: agentData.website_url || agentData.websiteUrl,
-        about: agentData.description || agentData.about_description || agentData.about,
-        internal_notes: agentData.internal_notes || agentData.notes,
-        platforms: agentData.platforms || [agentData.platform],
-        categories: agentData.categories || [agentData.category],
-        created_at: new Date().toISOString()
-      };
+      console.log('🔄 Firebase create - Data reçue:', agentData);
+      console.log('🔍 Type de agentData:', typeof agentData);
+      console.log('🔍 Clés de agentData:', Object.keys(agentData));
+      
+      // LOGS DÉTAILLÉS DE CHAQUE CHAMP
+      console.log('📝 name:', agentData.name);
+      console.log('📝 identifier:', agentData.identifier);
+      console.log('📝 phoneNumber:', agentData.phoneNumber);
+      console.log('📝 contactInfo:', agentData.contactInfo);
+      console.log('📝 about:', agentData.about);
+      console.log('📝 notes:', agentData.notes);
+      console.log('📝 languages:', agentData.languages);
+      console.log('📝 platform:', agentData.platform);
+      
+      // NETTOYER LES UNDEFINED POUR FIREBASE
+      const cleanData = {};
+      
+      // Champs obligatoires
+      cleanData.name = agentData.name || 'Agent sans nom';
+      cleanData.identifier = agentData.identifier || agentData.name || 'agent-' + Date.now();
+      cleanData.created_at = new Date().toISOString();
+      cleanData.platforms = agentData.platforms || [agentData.platform || 'whatsapp'];
+      cleanData.categories = agentData.categories || [agentData.category || 'other'];
+      cleanData.languages = agentData.languages || [];
+      cleanData.specialties = agentData.specialties || [];
+      
+      // Champs optionnels - SEULEMENT si ils existent
+      if (agentData.phoneNumber || agentData.phone_number) {
+        cleanData.phone_number = agentData.phoneNumber || agentData.phone_number;
+      }
+      if (agentData.contactInfo?.email || agentData.email) {
+        cleanData.email = agentData.contactInfo?.email || agentData.email;
+      }
+      if (agentData.contactInfo?.websiteUrl || agentData.website_url || agentData.websiteUrl) {
+        cleanData.website_url = agentData.contactInfo?.websiteUrl || agentData.website_url || agentData.websiteUrl;
+      }
+      if (agentData.about || agentData.description || agentData.about_description) {
+        cleanData.about = agentData.about || agentData.description || agentData.about_description;
+      }
+      if (agentData.notes || agentData.internal_notes) {
+        cleanData.internal_notes = agentData.notes || agentData.internal_notes;
+      }
+
+      const newAgent = cleanData;
+
+      console.log('📤 Firebase create - Data transformée:', newAgent);
+      console.log('🔥 Tentative ajout dans collection "agents"...');
 
       const docRef = await addDoc(collection(db, this.agentsCollection), newAgent);
+      console.log('✅ Document créé avec ID:', docRef.id);
+      
       const createdAgent = { id: docRef.id, ...newAgent };
       
-      console.log('✅ Agent créé:', createdAgent.name);
+      console.log('✅ Agent créé dans Firebase:', createdAgent.name);
       return { data: [createdAgent], error: null };
     } catch (error) {
-      console.error('❌ Erreur création agent:', error);
-      return { data: [], error };
+      console.error('❌ ERREUR FIREBASE DÉTAILLÉE:');
+      console.error('- Message:', error.message);
+      console.error('- Code:', error.code);
+      console.error('- Stack:', error.stack);
+      console.error('- Objet complet:', error);
+      
+      return { data: [], error: {
+        message: error.message,
+        code: error.code,
+        full: error
+      }};
     }
   }
 
   async update(id: string, updates: any): Promise<{ data: Agent[], error: any }> {
     try {
-      const transformedUpdates: any = {};
+      console.log('🔄 Firebase update - ID:', id, 'Updates:', updates);
       
-      if (updates.name) transformedUpdates.name = updates.name;
-      if (updates.identifier) transformedUpdates.identifier = updates.identifier;
-      if (updates.phone_number || updates.phoneNumber) {
-        transformedUpdates.phone_number = updates.phone_number || updates.phoneNumber;
+      // NETTOYER LES UNDEFINED POUR FIREBASE
+      const cleanUpdates: any = {};
+      
+      // Champs simples
+      if (updates.name) cleanUpdates.name = updates.name;
+      if (updates.identifier) cleanUpdates.identifier = updates.identifier;
+      
+      // Champs optionnels - SEULEMENT si ils existent et ne sont pas undefined
+      if (updates.phoneNumber || updates.phone_number) {
+        const phoneValue = updates.phoneNumber || updates.phone_number;
+        if (phoneValue !== undefined && phoneValue !== '') {
+          cleanUpdates.phone_number = phoneValue;
+        }
       }
-      if (updates.email) transformedUpdates.email = updates.email;
-      if (updates.website_url || updates.websiteUrl) {
-        transformedUpdates.website_url = updates.website_url || updates.websiteUrl;
+      if (updates.contactInfo?.email || updates.email) {
+        const emailValue = updates.contactInfo?.email || updates.email;
+        if (emailValue !== undefined && emailValue !== '') {
+          cleanUpdates.email = emailValue;
+        }
       }
-      if (updates.description || updates.about_description || updates.about) {
-        transformedUpdates.about = updates.description || updates.about_description || updates.about;
+      if (updates.contactInfo?.websiteUrl || updates.website_url || updates.websiteUrl) {
+        const urlValue = updates.contactInfo?.websiteUrl || updates.website_url || updates.websiteUrl;
+        if (urlValue !== undefined && urlValue !== '') {
+          cleanUpdates.website_url = urlValue;
+        }
       }
-      if (updates.internal_notes || updates.notes) {
-        transformedUpdates.internal_notes = updates.internal_notes || updates.notes;
+      if (updates.about || updates.description || updates.about_description) {
+        const aboutValue = updates.about || updates.description || updates.about_description;
+        if (aboutValue !== undefined && aboutValue !== '') {
+          cleanUpdates.about = aboutValue;
+        }
       }
+      if (updates.notes || updates.internal_notes) {
+        const notesValue = updates.notes || updates.internal_notes;
+        if (notesValue !== undefined && notesValue !== '') {
+          cleanUpdates.internal_notes = notesValue;
+        }
+      }
+      
+      // Arrays - toujours inclure même si vides
       if (updates.platforms) {
-        transformedUpdates.platforms = updates.platforms;
+        cleanUpdates.platforms = updates.platforms;
       } else if (updates.platform) {
-        transformedUpdates.platforms = [updates.platform];
+        cleanUpdates.platforms = [updates.platform];
       }
       if (updates.categories) {
-        transformedUpdates.categories = updates.categories;
+        cleanUpdates.categories = updates.categories;
       } else if (updates.category) {
-        transformedUpdates.categories = [updates.category];
+        cleanUpdates.categories = [updates.category];
+      }
+      if (updates.languages !== undefined) {
+        cleanUpdates.languages = updates.languages || [];
+      }
+      if (updates.specialties !== undefined) {
+        cleanUpdates.specialties = updates.specialties || [];
       }
 
+      console.log('📤 Firebase update - Data nettoyée:', cleanUpdates);
+
       const docRef = doc(db, this.agentsCollection, id);
-      await updateDoc(docRef, transformedUpdates);
+      await updateDoc(docRef, cleanUpdates);
       
       // Récupérer l'agent mis à jour
       const updatedDoc = await getDoc(docRef);
       if (updatedDoc.exists()) {
         const updatedAgent = { id: updatedDoc.id, ...updatedDoc.data() } as Agent;
-        console.log('✅ Agent modifié:', id);
+        console.log('✅ Agent modifié dans Firebase:', id);
         return { data: [updatedAgent], error: null };
       }
       
       throw new Error('Agent non trouvé après modification');
     } catch (error) {
-      console.error('❌ Erreur modification agent:', error);
-      return { data: [], error };
+      console.error('❌ Erreur modification agent Firebase:', error);
+      return { data: [], error: error };
     }
   }
 
   async delete(id: string): Promise<{ data: any, error: any }> {
     try {
-      await deleteDoc(doc(db, this.agentsCollection, id));
-      console.log('✅ Agent supprimé:', id);
+      console.log('🗑️ Firebase delete - ID reçu:', id);
+      console.log('🗑️ Type de ID:', typeof id);
+      console.log('🗑️ Collection:', this.agentsCollection);
+      
+      // Vérifier que l'agent existe avant suppression
+      const docRef = doc(db, this.agentsCollection, id);
+      const docSnap = await getDoc(docRef);
+      
+      if (!docSnap.exists()) {
+        console.error('❌ Agent non trouvé avec ID:', id);
+        return { data: null, error: { message: 'Agent non trouvé avec ID: ' + id, code: 'not-found' } };
+      }
+      
+      console.log('✅ Agent trouvé, suppression...');
+      await deleteDoc(docRef);
+      console.log('✅ Agent supprimé avec succès:', id);
       return { data: { id }, error: null };
     } catch (error) {
-      console.error('❌ Erreur suppression agent:', error);
-      return { data: null, error };
+      console.error('❌ ERREUR SUPPRESSION FIREBASE DÉTAILLÉE:');
+      console.error('- Message:', error.message);
+      console.error('- Code:', error.code);
+      console.error('- Stack:', error.stack);
+      console.error('- ID problématique:', id);
+      return { data: null, error: {
+        message: error.message,
+        code: error.code,
+        id: id
+      }};
     }
   }
 

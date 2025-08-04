@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Firebase SIMPLE</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .log { margin: 5px 0; padding: 5px; border-radius: 3px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        button { padding: 10px 15px; margin: 5px; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 5px; max-height: 300px; overflow-y: auto; }
+    </style>
+</head>
+<body>
+    <h1>🔥 Test Firebase - Agent Simple</h1>
+    
+    <button onclick="testSimpleAgent()">TEST AGENT SIMPLE</button>
+    <button onclick="testFirebaseRules()">TEST PERMISSIONS</button>
+    <button onclick="clearLogs()">CLEAR LOGS</button>
+    
+    <div id="logs"></div>
+    <pre id="console"></pre>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, collection, addDoc, getDocs } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBLVDsQkjsazFY12l74O8CJ06a_C0z-Los",
+            authDomain: "oxo-ultimate.firebaseapp.com",
+            projectId: "oxo-ultimate",
+            storageBucket: "oxo-ultimate.firebasestorage.app",
+            messagingSenderId: "929628007088",
+            appId: "1:929628007088:web:d2b9c790e1d89145352975",
+            measurementId: "G-QZLM6D58DP"
+        };
+
+        let app, db;
+        let logs = [];
+
+        function addLog(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = `[${timestamp}] ${message}`;
+            logs.push(logEntry);
+            
+            const logsDiv = document.getElementById('logs');
+            const logDiv = document.createElement('div');
+            logDiv.className = `log ${type}`;
+            logDiv.textContent = logEntry;
+            logsDiv.appendChild(logDiv);
+            
+            document.getElementById('console').textContent = logs.join('\n');
+            console.log(logEntry);
+        }
+
+        try {
+            app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            addLog('✅ Firebase initialisé', 'success');
+        } catch (error) {
+            addLog('❌ Erreur init Firebase: ' + error.message, 'error');
+        }
+
+        window.testSimpleAgent = async function() {
+            try {
+                addLog('🔄 Test ajout agent ULTRA simple...', 'info');
+                
+                // Agent MINIMAL
+                const simpleAgent = {
+                    name: 'Test Agent ' + Date.now(),
+                    identifier: 'test-' + Date.now(),
+                    created_at: new Date().toISOString()
+                };
+
+                addLog('📤 Data agent: ' + JSON.stringify(simpleAgent), 'info');
+                
+                const docRef = await addDoc(collection(db, 'agents'), simpleAgent);
+                addLog('✅ SUCCESS! ID: ' + docRef.id, 'success');
+                
+                // Vérifier qu'il existe
+                const allDocs = await getDocs(collection(db, 'agents'));
+                addLog('📊 Total agents dans Firebase: ' + allDocs.size, 'info');
+                
+            } catch (error) {
+                addLog('❌ ERREUR: ' + error.message, 'error');
+                addLog('❌ Code: ' + error.code, 'error');
+                addLog('❌ Stack: ' + error.stack, 'error');
+            }
+        };
+
+        window.testFirebaseRules = async function() {
+            try {
+                addLog('🔍 Test permissions Firestore...', 'info');
+                
+                // Test lecture
+                const snapshot = await getDocs(collection(db, 'agents'));
+                addLog('✅ Lecture OK - ' + snapshot.size + ' documents', 'success');
+                
+                // Test écriture minimale
+                const testDoc = {
+                    test: true,
+                    timestamp: Date.now()
+                };
+                
+                const docRef = await addDoc(collection(db, 'test'), testDoc);
+                addLog('✅ Écriture OK - ID: ' + docRef.id, 'success');
+                
+            } catch (error) {
+                addLog('❌ Permissions ERROR: ' + error.message, 'error');
+                addLog('❌ Code: ' + error.code, 'error');
+                
+                if (error.code === 'permission-denied') {
+                    addLog('🚨 PROBLÈME: Règles Firestore trop restrictives!', 'error');
+                    addLog('💡 Solution: Aller dans Firebase Console > Firestore > Rules', 'info');
+                    addLog('💡 Changer en: allow read, write: if true;', 'info');
+                }
+            }
+        };
+
+        window.clearLogs = function() {
+            logs = [];
+            document.getElementById('logs').innerHTML = '';
+            document.getElementById('console').textContent = '';
+        };
+
+        // Test auto
+        setTimeout(() => {
+            testFirebaseRules();
+        }, 1000);
+    </script>
+</body>
+</html>

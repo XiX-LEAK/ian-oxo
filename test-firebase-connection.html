@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Connexion Firebase</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; }
+        .status { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 5px; overflow-x: auto; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>🔥 Test Connexion Firebase - OXO Ultimate</h1>
+    
+    <div id="status"></div>
+    
+    <button onclick="testConnection()">Tester la connexion</button>
+    <button onclick="testCreateAgent()">Tester création agent</button>
+    <button onclick="testGetAgents()">Récupérer agents</button>
+    <button onclick="clearLogs()">Effacer logs</button>
+    
+    <h2>Logs en temps réel :</h2>
+    <pre id="logs"></pre>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, collection, getDocs, addDoc, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        // Configuration Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyBLVDsQkjsazFY12l74O8CJ06a_C0z-Los",
+            authDomain: "oxo-ultimate.firebaseapp.com",
+            projectId: "oxo-ultimate",
+            storageBucket: "oxo-ultimate.firebasestorage.app",
+            messagingSenderId: "929628007088",
+            appId: "1:929628007088:web:d2b9c790e1d89145352975"
+        };
+
+        // Initialiser Firebase
+        let app, db;
+        let logs = [];
+        
+        function addLog(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            logs.push(`[${timestamp}] ${message}`);
+            document.getElementById('logs').textContent = logs.join('\n');
+            
+            const status = document.getElementById('status');
+            const div = document.createElement('div');
+            div.className = `status ${type}`;
+            div.textContent = `[${timestamp}] ${message}`;
+            status.appendChild(div);
+            
+            // Garder seulement les 10 derniers messages de status
+            while (status.children.length > 10) {
+                status.removeChild(status.firstChild);
+            }
+        }
+
+        try {
+            app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            addLog('✅ Firebase initialisé avec succès', 'success');
+        } catch (error) {
+            addLog('❌ Erreur initialisation Firebase: ' + error.message, 'error');
+        }
+
+        // Fonctions globales
+        window.testConnection = async function() {
+            try {
+                addLog('🔄 Test de connexion Firebase...', 'info');
+                
+                // Test simple : essayer de lire la collection settings
+                const settingsRef = doc(db, 'settings', 'main');
+                const settingsSnap = await getDoc(settingsRef);
+                
+                if (settingsSnap.exists()) {
+                    addLog('✅ Connexion Firebase OK - Settings trouvés', 'success');
+                    addLog('📋 Settings: ' + JSON.stringify(settingsSnap.data()), 'info');
+                } else {
+                    addLog('⚠️ Connexion OK mais pas de settings configurés', 'info');
+                }
+            } catch (error) {
+                addLog('❌ Erreur connexion Firebase: ' + error.message, 'error');
+                console.error('Erreur détaillée:', error);
+            }
+        };
+
+        window.testCreateAgent = async function() {
+            try {
+                addLog('🔄 Test création agent...', 'info');
+                
+                const testAgent = {
+                    name: `Agent Test ${Date.now()}`,
+                    identifier: `test-${Date.now()}`,
+                    phone_number: '+33 6 12 34 56 78',
+                    email: 'test@example.com',
+                    website_url: 'https://example.com',
+                    about: 'Agent de test créé automatiquement',
+                    internal_notes: 'Notes de test',
+                    platforms: ['whatsapp'],
+                    categories: ['test'],
+                    languages: ['Français'],
+                    specialties: ['Test'],
+                    created_at: new Date().toISOString()
+                };
+
+                addLog('📤 Création agent avec data: ' + JSON.stringify(testAgent, null, 2), 'info');
+                
+                const docRef = await addDoc(collection(db, 'agents'), testAgent);
+                addLog('✅ Agent créé avec ID: ' + docRef.id, 'success');
+                
+                // Vérifier que l'agent a été créé
+                const createdDoc = await getDoc(docRef);
+                if (createdDoc.exists()) {
+                    addLog('✅ Vérification OK - Agent trouvé: ' + createdDoc.data().name, 'success');
+                }
+                
+            } catch (error) {
+                addLog('❌ Erreur création agent: ' + error.message, 'error');
+                console.error('Erreur détaillée:', error);
+            }
+        };
+
+        window.testGetAgents = async function() {
+            try {
+                addLog('🔄 Récupération des agents...', 'info');
+                
+                const querySnapshot = await getDocs(collection(db, 'agents'));
+                const agents = [];
+                
+                querySnapshot.forEach((doc) => {
+                    agents.push({ id: doc.id, ...doc.data() });
+                });
+                
+                addLog(`✅ ${agents.length} agents trouvés`, 'success');
+                
+                if (agents.length > 0) {
+                    addLog('📋 Premiers agents:', 'info');
+                    agents.slice(0, 3).forEach(agent => {
+                        addLog(`  - ${agent.name} (${agent.identifier})`, 'info');
+                    });
+                }
+                
+            } catch (error) {
+                addLog('❌ Erreur récupération agents: ' + error.message, 'error');
+                console.error('Erreur détaillée:', error);
+            }
+        };
+
+        window.clearLogs = function() {
+            logs = [];
+            document.getElementById('logs').textContent = '';
+            document.getElementById('status').innerHTML = '';
+            addLog('🧹 Logs effacés', 'info');
+        };
+
+        // Test automatique au chargement
+        setTimeout(() => {
+            testConnection();
+        }, 1000);
+    </script>
+</body>
+</html>

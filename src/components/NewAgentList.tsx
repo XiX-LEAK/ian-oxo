@@ -4,13 +4,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Filter, Plus, Edit, Trash2, Phone, Mail, Globe, User, Star, MapPin, Clock, Shield, Eye, ChevronDown, ChevronUp } from 'lucide-react';
 import { useNewAgentStore } from '@/stores/newAgentStore';
 import { useAuthStore } from '@/stores/authStore';
-import { type SimpleAgentData } from '@/services/newAgentService';
+// Type SimpleAgentData défini dans le store
 
 export const NewAgentList: React.FC = () => {
   const { agents, isLoading, error, loadAgents, addAgent, updateAgent, deleteAgent, clearError } = useNewAgentStore();
   const { mode } = useAuthStore();
   const [showForm, setShowForm] = useState(false);
-  const [editingAgent, setEditingAgent] = useState<SimpleAgentData | null>(null);
+  const [editingAgent, setEditingAgent] = useState<any | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   // Platform filter removed
   const [expandedDescriptions, setExpandedDescriptions] = useState<Record<string, boolean>>({});
@@ -206,7 +206,7 @@ export const NewAgentList: React.FC = () => {
   };
 
   // 🗑️ SUPPRIMER AGENT
-  const handleDelete = (agent: SimpleAgentData) => {
+  const handleDelete = (agent: any) => {
     if (confirm(`Êtes-vous sûr de vouloir supprimer ${agent.name} ?`)) {
       deleteAgent(agent.id);
     }

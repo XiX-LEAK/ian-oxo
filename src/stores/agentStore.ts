@@ -125,7 +125,8 @@ export const useAgentStore = create<AgentStore>()(
             console.log('🔄 Chargement des agents depuis Firebase...');
             const result = await firebaseService.getAll();
             if (result.error) {
-              throw new Error('Erreur Firebase');
+              console.error('❌ Erreur Firebase getAll:', result.error);
+              throw new Error('Erreur Firebase: ' + JSON.stringify(result.error));
             }
             agents = result.data;
             console.log(`✅ ${agents.length} agents chargés depuis Firebase`);
@@ -215,8 +216,12 @@ export const useAgentStore = create<AgentStore>()(
           console.log('📥 Résultat création:', result);
           
           if (result.error) {
-            console.error('❌ Erreur création:', result.error);
-            throw new Error('Échec de création: ' + result.error);
+            console.error('❌ Erreur création Firebase:', result.error);
+            set({ 
+              error: 'Erreur Firebase: ' + JSON.stringify(result.error),
+              isLoading: false 
+            });
+            return false;
           }
           
           // Transformer en Agent pour le store
@@ -302,11 +307,15 @@ export const useAgentStore = create<AgentStore>()(
           
           const result = await firebaseService.update(agentData.id, updateData);
           
-          console.log('📥 Résultat databaseService:', result);
+          console.log('📥 Résultat Firebase update:', result);
           
           if (result.error) {
-            console.error('❌ Erreur databaseService:', result.error);
-            throw new Error('Échec de mise à jour: ' + result.error);
+            console.error('❌ Erreur Firebase update:', result.error);
+            set({ 
+              error: 'Erreur Firebase: ' + JSON.stringify(result.error),
+              isLoading: false 
+            });
+            return false;
           }
           
           // Mise à jour locale directe
@@ -366,11 +375,15 @@ export const useAgentStore = create<AgentStore>()(
           // Supprimer directement avec databaseService
           const result = await firebaseService.delete(id);
           
-          console.log('📥 Résultat suppression:', result);
+          console.log('📥 Résultat suppression Firebase:', result);
           
           if (result.error) {
-            console.error('❌ Erreur suppression:', result.error);
-            throw new Error('Échec de suppression: ' + result.error);
+            console.error('❌ Erreur suppression Firebase:', result.error);
+            set({ 
+              error: 'Erreur Firebase: ' + JSON.stringify(result.error),
+              isLoading: false 
+            });
+            return false;
           }
           
           // Mettre à jour le store local
