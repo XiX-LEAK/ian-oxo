@@ -349,30 +349,54 @@ function App() {
                 </motion.span>
               </motion.h1>
               
-              {/* Description avec effet typewriter */}
+              {/* Description avec effet typewriter responsive */}
               <motion.div
                 className="text-lg md:text-2xl text-gray-600 mb-8 md:mb-16 max-w-3xl mx-auto leading-relaxed px-4"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6, duration: 0.8 }}
               >
-                <motion.p
-                  initial={{ width: 0 }}
-                  animate={{ width: "100%" }}
-                  transition={{ delay: 1, duration: 2, ease: "easeInOut" }}
-                  className="overflow-hidden whitespace-nowrap border-r-2 border-orange-500 mx-auto"
-                  style={{ borderRight: "2px solid #f97316" }}
-                >
-                  Votre plateforme professionnelle d'agents vérifiés
-                </motion.p>
-                <motion.p
-                  className="mt-4 text-lg"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 3, duration: 1 }}
-                >
-                  WhatsApp • WeChat et plus encore
-                </motion.p>
+                {/* Version mobile - sans typewriter */}
+                <div className="block md:hidden text-center">
+                  <motion.p
+                    className="text-base leading-relaxed"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 1, duration: 1 }}
+                  >
+                    Votre plateforme professionnelle<br />
+                    d'agents vérifiés
+                  </motion.p>
+                  <motion.p
+                    className="mt-4 text-lg"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 2, duration: 1 }}
+                  >
+                    WhatsApp • WeChat et plus encore
+                  </motion.p>
+                </div>
+
+                {/* Version desktop - avec typewriter */}
+                <div className="hidden md:block">
+                  <motion.p
+                    initial={{ width: 0 }}
+                    animate={{ width: "100%" }}
+                    transition={{ delay: 1, duration: 2, ease: "easeInOut" }}
+                    className="overflow-hidden whitespace-nowrap border-r-2 border-orange-500 mx-auto"
+                    style={{ borderRight: "2px solid #f97316" }}
+                  >
+                    Votre plateforme professionnelle d'agents vérifiés
+                  </motion.p>
+                  <motion.p
+                    className="mt-4 text-lg"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 3, duration: 1 }}
+                  >
+                    WhatsApp • WeChat et plus encore
+                  </motion.p>
+                </div>
               </motion.div>
 
               {/* Blocs de fonctionnalités avec animations conservées mais design original */}
