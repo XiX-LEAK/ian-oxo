@@ -404,7 +404,8 @@ export const NewAgentList: React.FC = () => {
 
                   {/* INFORMATIONS DE CONTACT */}
                   <div className="flex flex-wrap gap-3 mb-6">
-                    {agent.phoneNumber && (
+                    {/* TÉLÉPHONE - ADMIN SEULEMENT */}
+                    {agent.phoneNumber && mode === 'admin' && (
                       <motion.div 
                         className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-blue-100/60 to-blue-200/40 rounded-xl border border-blue-200/30 backdrop-blur-sm"
                         whileHover={{ scale: 1.05 }}
@@ -413,6 +414,8 @@ export const NewAgentList: React.FC = () => {
                         <span className="text-blue-700 font-medium text-sm">{agent.phoneNumber}</span>
                       </motion.div>
                     )}
+                    
+                    {/* EMAIL - VISIBLE POUR TOUS */}
                     {agent.email && (
                       <motion.div 
                         className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-green-100/60 to-green-200/40 rounded-xl border border-green-200/30 backdrop-blur-sm"
@@ -422,7 +425,9 @@ export const NewAgentList: React.FC = () => {
                         <span className="text-green-700 font-medium text-sm">{agent.email}</span>
                       </motion.div>
                     )}
-                    {agent.websiteUrl && (
+                    
+                    {/* SITE WEB - ADMIN SEULEMENT */}
+                    {agent.websiteUrl && mode === 'admin' && (
                       <motion.div 
                         className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-purple-100/60 to-purple-200/40 rounded-xl border border-purple-200/30 backdrop-blur-sm"
                         whileHover={{ scale: 1.05 }}

@@ -226,7 +226,7 @@ function App() {
       <main className="pt-6 relative z-10">
         {!hasAccessToSite ? (
           // Landing Page pour utilisateurs sans accès au site
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative min-h-screen">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative min-h-screen pb-20">
             {/* Éléments flottants décoratifs */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
               {[...Array(8)].map((_, i) => (
