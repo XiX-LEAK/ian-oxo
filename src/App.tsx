@@ -11,6 +11,7 @@ import { ScrollReveal } from '@/components/animations/ScrollReveal';
 import { StaggeredReveal } from '@/components/animations/ScrollReveal';
 import { AnimatedButton } from '@/components/animations/AnimatedButton';
 import { LoadingSpinner } from '@/components/animations/LoadingSpinner';
+import { SessionTimer } from '@/components/SessionTimer';
 import { useAuthStore } from '@/stores/authStore';
 import { useAgentStore } from '@/stores/agentStore';
 import { useAutoLogout, useSessionCleanup } from '@/hooks/useAutoLogout';
@@ -209,6 +210,9 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-orange-50/30 relative overflow-hidden">
+      {/* Timer de session */}
+      <SessionTimer />
+      
       {/* Arrière-plan de particules */}
       <ParticleBackground particleCount={40} animated={true} />
       
