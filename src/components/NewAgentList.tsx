@@ -19,10 +19,34 @@ export const NewAgentList: React.FC = () => {
     loadAgents();
   }, [loadAgents]);
 
-  // 🔍 FILTRAGE DES AGENTS (recherche uniquement)
+  // 🔍 RECHERCHE INTELLIGENTE - Recherche dans plusieurs champs
   const filteredAgents = agents.filter(agent => {
-    const matchSearch = agent.name.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchSearch;
+    if (!searchQuery.trim()) return true;
+    
+    const query = searchQuery.toLowerCase().trim();
+    
+    // Recherche dans le nom
+    const matchName = agent.name.toLowerCase().includes(query);
+    
+    // Recherche dans la description (about)
+    const matchDescription = agent.about?.toLowerCase().includes(query) || false;
+    
+    // Recherche dans l'email
+    const matchEmail = agent.email?.toLowerCase().includes(query) || false;
+    
+    // Recherche dans le téléphone
+    const matchPhone = agent.phoneNumber?.toLowerCase().includes(query) || false;
+    
+    // Recherche dans l'URL du site web
+    const matchWebsite = agent.websiteUrl?.toLowerCase().includes(query) || false;
+    
+    // Recherche dans les notes internes (pour les admins)
+    const matchNotes = (mode === 'admin' && (agent.internal_notes?.toLowerCase().includes(query) || agent.notes?.toLowerCase().includes(query))) || false;
+    
+    // Recherche dans la catégorie
+    const matchCategory = agent.category?.toLowerCase().includes(query) || false;
+    
+    return matchName || matchDescription || matchEmail || matchPhone || matchWebsite || matchNotes || matchCategory;
   });
 
   // 📝 FORMULAIRE D'AGENT AVEC DESIGN ORIGINAL
@@ -293,7 +317,7 @@ export const NewAgentList: React.FC = () => {
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-orange-800" />
             <input
               type="text"
-              placeholder="Rechercher un agent..."
+              placeholder="Rechercher par nom, description, email, téléphone..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full h-14 pl-12 pr-4 border-2 border-orange-200/40 rounded-2xl focus:ring-4 focus:ring-orange-300/50 focus:border-orange-400 bg-white/60 backdrop-blur-sm text-gray-900 placeholder-orange-400/70 transition-all duration-300 shadow-inner"
