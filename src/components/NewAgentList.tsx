@@ -298,24 +298,34 @@ export const NewAgentList: React.FC = () => {
           
           {/* Informations principales */}
           <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-3 mb-2">
-              <h3 className="text-lg font-bold text-gray-900 truncate">{agent.name}</h3>
+            <div className="mb-2">
+              <h3 className="text-lg font-bold text-gray-900 truncate mb-2">{agent.name}</h3>
               
-              {/* Badges de contact compacts - VISIBLES POUR TOUS */}
-              <div className="flex gap-1">
+              {/* Informations de contact complètes - VISIBLES POUR TOUS */}
+              <div className="flex flex-wrap gap-2">
                 {agent.email && (
-                  <div className="w-6 h-6 bg-green-100 rounded-lg flex items-center justify-center" title={agent.email}>
+                  <div className="flex items-center gap-1 px-2 py-1 bg-green-100/60 rounded-lg border border-green-200/30">
                     <Mail className="w-3 h-3 text-green-600" />
+                    <span className="text-green-700 text-xs font-medium">{agent.email}</span>
                   </div>
                 )}
                 {(agent.phoneNumber || agent.phone_number) && (
-                  <div className="w-6 h-6 bg-blue-100 rounded-lg flex items-center justify-center" title={agent.phoneNumber || agent.phone_number}>
+                  <div className="flex items-center gap-1 px-2 py-1 bg-blue-100/60 rounded-lg border border-blue-200/30">
                     <Phone className="w-3 h-3 text-blue-600" />
+                    <span className="text-blue-700 text-xs font-medium">{agent.phoneNumber || agent.phone_number}</span>
                   </div>
                 )}
                 {(agent.websiteUrl || agent.website_url) && (
-                  <div className="w-6 h-6 bg-purple-100 rounded-lg flex items-center justify-center" title={agent.websiteUrl || agent.website_url}>
+                  <div className="flex items-center gap-1 px-2 py-1 bg-purple-100/60 rounded-lg border border-purple-200/30">
                     <Globe className="w-3 h-3 text-purple-600" />
+                    <a 
+                      href={(agent.websiteUrl || agent.website_url)?.startsWith('http') ? (agent.websiteUrl || agent.website_url) : `https://${agent.websiteUrl || agent.website_url}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-purple-700 hover:text-purple-800 text-xs font-medium truncate max-w-32"
+                    >
+                      {agent.websiteUrl || agent.website_url}
+                    </a>
                   </div>
                 )}
               </div>
@@ -546,45 +556,42 @@ export const NewAgentList: React.FC = () => {
                       <h3 className="text-lg font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">{agent.name}</h3>
                     </div>
 
-                    {/* INFORMATIONS DE CONTACT - Centrées et compactes pour grille - VISIBLES POUR TOUS */}
-                    <div className="flex flex-wrap justify-center gap-2 mb-4">
-                      {/* TÉLÉPHONE - VISIBLE POUR TOUS */}
-                      {(agent.phoneNumber || agent.phone_number) && (
-                        <motion.div 
-                          className="flex items-center gap-1 px-2 py-1 bg-gradient-to-r from-blue-100/60 to-blue-200/40 rounded-lg border border-blue-200/30 backdrop-blur-sm"
-                          whileHover={{ scale: 1.05 }}
-                          title={agent.phoneNumber || agent.phone_number}
-                        >
-                          <Phone className="w-3 h-3 text-blue-600" />
-                          <span className="text-blue-700 font-medium text-xs truncate max-w-20">{agent.phoneNumber || agent.phone_number}</span>
-                        </motion.div>
-                      )}
-                      
+                    {/* INFORMATIONS DE CONTACT - Complètes et visibles - VISIBLES POUR TOUS */}
+                    <div className="space-y-2 mb-4">
                       {/* EMAIL - VISIBLE POUR TOUS */}
                       {agent.email && (
                         <motion.div 
-                          className="flex items-center gap-1 px-2 py-1 bg-gradient-to-r from-green-100/60 to-green-200/40 rounded-lg border border-green-200/30 backdrop-blur-sm"
-                          whileHover={{ scale: 1.05 }}
-                          title={agent.email}
+                          className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-green-100/60 to-green-200/40 rounded-lg border border-green-200/30 backdrop-blur-sm justify-center"
+                          whileHover={{ scale: 1.02 }}
                         >
-                          <Mail className="w-3 h-3 text-green-600" />
-                          <span className="text-green-700 font-medium text-xs truncate max-w-24">{agent.email}</span>
+                          <Mail className="w-4 h-4 text-green-600" />
+                          <span className="text-green-700 font-medium text-sm">{agent.email}</span>
+                        </motion.div>
+                      )}
+                      
+                      {/* TÉLÉPHONE - VISIBLE POUR TOUS */}
+                      {(agent.phoneNumber || agent.phone_number) && (
+                        <motion.div 
+                          className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-blue-100/60 to-blue-200/40 rounded-lg border border-blue-200/30 backdrop-blur-sm justify-center"
+                          whileHover={{ scale: 1.02 }}
+                        >
+                          <Phone className="w-4 h-4 text-blue-600" />
+                          <span className="text-blue-700 font-medium text-sm">{agent.phoneNumber || agent.phone_number}</span>
                         </motion.div>
                       )}
                       
                       {/* SITE WEB - VISIBLE POUR TOUS */}
                       {(agent.websiteUrl || agent.website_url) && (
                         <motion.div 
-                          className="flex items-center gap-1 px-2 py-1 bg-gradient-to-r from-purple-100/60 to-purple-200/40 rounded-lg border border-purple-200/30 backdrop-blur-sm"
-                          whileHover={{ scale: 1.05 }}
+                          className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-purple-100/60 to-purple-200/40 rounded-lg border border-purple-200/30 backdrop-blur-sm justify-center"
+                          whileHover={{ scale: 1.02 }}
                         >
-                          <Globe className="w-3 h-3 text-purple-600" />
+                          <Globe className="w-4 h-4 text-purple-600" />
                           <a 
                             href={(agent.websiteUrl || agent.website_url)?.startsWith('http') ? (agent.websiteUrl || agent.website_url) : `https://${agent.websiteUrl || agent.website_url}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-purple-700 hover:text-purple-800 font-medium text-xs truncate max-w-20"
-                            title={agent.websiteUrl || agent.website_url}
+                            className="text-purple-700 hover:text-purple-800 font-medium text-sm break-all text-center"
                           >
                             {agent.websiteUrl || agent.website_url}
                           </a>
