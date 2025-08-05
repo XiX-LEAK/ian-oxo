@@ -180,8 +180,8 @@ function App() {
           </div>
         </motion.div>
         
-        {/* Cercles de fond animés */}
-        {[...Array(5)].map((_, i) => (
+        {/* Cercles de fond animés - Réduits */}
+        {[...Array(3)].map((_, i) => (
           <motion.div
             key={i}
             className="absolute rounded-full border-2 border-orange-200/30"
@@ -215,7 +215,7 @@ function App() {
       
       {/* Arrière-plan de particules avec flou continu */}
       <div className="fixed inset-0 z-0">
-        <ParticleBackground particleCount={40} animated={true} />
+        <ParticleBackground particleCount={15} animated={true} />
       </div>
       
       <Header 
@@ -227,9 +227,9 @@ function App() {
         {!hasAccessToSite ? (
           // Landing Page pour utilisateurs sans accès au site
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative min-h-screen pb-20">
-            {/* Éléments flottants décoratifs */}
+            {/* Éléments flottants décoratifs - Optimisés */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
-              {[...Array(8)].map((_, i) => (
+              {[...Array(4)].map((_, i) => (
                 <motion.div
                   key={i}
                   className="absolute w-2 h-2 bg-gradient-to-r from-orange-400 to-purple-500 rounded-full opacity-60"
@@ -254,58 +254,7 @@ function App() {
             </div>
 
             <ScrollReveal variant="fadeInUp" className="text-center py-10 md:py-20 relative z-10">
-              {/* Logo principal avec animations avancées */}
-              <motion.div 
-                className="w-24 h-24 md:w-32 md:h-32 bg-gradient-to-br from-orange-500 via-red-500 to-purple-600 rounded-3xl flex items-center justify-center mb-8 md:mb-12 mx-auto relative overflow-hidden"
-                whileHover={{ 
-                  scale: 1.1,
-                  rotate: [0, 5, -5, 0],
-                  boxShadow: "0 25px 60px rgba(249, 115, 22, 0.4)"
-                }}
-                animate={{
-                  y: [0, -10, 0],
-                  rotateY: [0, 10, 0, -10, 0]
-                }}
-                transition={{ 
-                  y: { duration: 4, repeat: Infinity, ease: "easeInOut" },
-                  rotateY: { duration: 6, repeat: Infinity, ease: "easeInOut" }
-                }}
-              >
-                <svg className="w-12 h-12 md:w-16 md:h-16 text-white relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
-                
-                {/* Effet de brillance animée */}
-                <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -skew-x-12"
-                  animate={{ x: ["-100%", "200%"] }}
-                  transition={{
-                    duration: 3,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                  }}
-                />
-                
-                {/* Anneaux orbitaux */}
-                {[...Array(3)].map((_, i) => (
-                  <motion.div
-                    key={i}
-                    className="absolute border-2 border-white/20 rounded-full"
-                    style={{
-                      width: 140 + i * 20,
-                      height: 140 + i * 20,
-                      left: -10 - i * 10,
-                      top: -10 - i * 10,
-                    }}
-                    animate={{ rotate: 360 }}
-                    transition={{
-                      duration: 8 + i * 2,
-                      repeat: Infinity,
-                      ease: "linear"
-                    }}
-                  />
-                ))}
-              </motion.div>
+              {/* Logo supprimé pour optimisation */}
               
               {/* Titre avec effet de texte liquide */}
               <motion.h1 
@@ -329,8 +278,8 @@ function App() {
                 >
                   OXO
                   
-                  {/* Effet de particules autour du texte */}
-                  {[...Array(6)].map((_, i) => (
+                  {/* Effet de particules autour du texte - Réduit */}
+                  {[...Array(3)].map((_, i) => (
                     <motion.div
                       key={i}
                       className="absolute w-1 h-1 bg-orange-500 rounded-full"
@@ -460,9 +409,9 @@ function App() {
                       transition: { duration: 0.3 }
                     }}
                   >
-                    {/* Particules flottantes dans la carte */}
+                    {/* Particules flottantes dans la carte - Optimisées */}
                     <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                      {[...Array(3)].map((_, i) => (
+                      {[...Array(2)].map((_, i) => (
                         <motion.div
                           key={i}
                           className="absolute w-1 h-1 bg-orange-400 rounded-full opacity-40"
@@ -721,7 +670,7 @@ function App() {
       <ScrollReveal variant="fadeInUp" className="mt-20">
         <footer className="glass-effect border-t border-gray-200/50 relative overflow-hidden">
           <div className="absolute inset-0 z-0">
-            <ParticleBackground particleCount={20} animated={true} />
+            <ParticleBackground particleCount={10} animated={true} />
           </div>
           
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-10">

@@ -67,11 +67,18 @@
   --elastic: cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-/* Base Styles */
+/* Base Styles - Optimisé pour performances */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+/* Optimisations GPU pour animations fluides */
+*[class*="motion-"] {
+  will-change: transform;
+  backface-visibility: hidden;
+  transform: translateZ(0);
 }
 
 html {
@@ -90,7 +97,11 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   position: relative;
-  animation: gradientShift 20s ease infinite;
+  animation: gradientShift 30s ease infinite;
+  /* Optimisations de performance */
+  will-change: transform;
+  backface-visibility: hidden;
+  transform: translateZ(0);
 }
 
 /* Animated gradient background */
@@ -183,7 +194,7 @@ body {
   /* Suppression de la ligne de gradient au sommet pour design propre */
   
   .glass-card:hover {
-    transform: translateY(-8px) scale(1.02);
+    transform: translateY(-4px) scale(1.01);
     box-shadow: var(--shadow-xl), var(--shadow-glow);
     border-color: rgba(255, 107, 53, 0.3);
   }

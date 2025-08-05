@@ -8,7 +8,7 @@ interface ParticleBackgroundProps {
 }
 
 export const ParticleBackground: React.FC<ParticleBackgroundProps> = ({
-  particleCount = 50,
+  particleCount = 20,
   colors = ['#f97316', '#3b82f6', '#10b981', '#8b5cf6'],
   animated = true
 }) => {
@@ -69,8 +69,8 @@ export const ParticleBackground: React.FC<ParticleBackgroundProps> = ({
         />
       ))}
 
-      {/* Formes géométriques flottantes */}
-      {[...Array(8)].map((_, i) => (
+      {/* Formes géométriques flottantes - Réduites pour performance */}
+      {[...Array(3)].map((_, i) => (
         <motion.div
           key={`shape-${i}`}
           className="absolute opacity-5"
@@ -115,9 +115,9 @@ export const ParticleBackground: React.FC<ParticleBackgroundProps> = ({
         </motion.div>
       ))}
 
-      {/* Lignes de connexion animées */}
+      {/* Lignes de connexion animées - Réduites */}
       <svg className="absolute inset-0 w-full h-full">
-        {[...Array(6)].map((_, i) => (
+        {[...Array(2)].map((_, i) => (
           <motion.line
             key={`line-${i}`}
             x1={`${Math.random() * 100}%`}
