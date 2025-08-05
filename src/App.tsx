@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { Lock, Rocket, Zap, Shield, Flame, CheckCircle, CheckCircle2, MessageSquare, Clock, Headphones, RefreshCw, Database, HelpCircle, ArrowRight } from 'lucide-react';
 import { Header } from '@/components/Header';
 import { AgentList } from '@/components/AgentList';
 import { NewAgentList } from '@/components/NewAgentList';
@@ -7,7 +8,6 @@ import { AdminDashboard } from '@/components/AdminDashboard';
 import { AgentModal } from '@/components/AgentModal';
 import { PasswordReset } from '@/components/PasswordReset';
 import { ParticleBackground } from '@/components/animations/ParticleBackground';
-import { ScrollReveal } from '@/components/animations/ScrollReveal';
 import { StaggeredReveal } from '@/components/animations/ScrollReveal';
 import { AnimatedButton } from '@/components/animations/AnimatedButton';
 import { LoadingSpinner } from '@/components/animations/LoadingSpinner';
@@ -173,7 +173,7 @@ function App() {
               ))}
             </div>
 
-            <ScrollReveal variant="fadeInUp" className="text-center py-10 md:py-20 relative z-10">
+            <div className="text-center py-10 md:py-20 relative z-10">
               {/* Logo supprimé pour optimisation */}
               
               {/* Titre simplifié pour plus de fluidité */}
@@ -184,9 +184,24 @@ function App() {
                 transition={{ delay: 0.2, duration: 0.6 }}
               >
                 <span className="text-gray-900">Bienvenue sur </span>
-                <span className="text-gradient bg-gradient-to-r from-orange-500 via-red-500 to-purple-600 bg-clip-text text-transparent">
+                <motion.span 
+                  className="text-gradient bg-gradient-to-r from-orange-500 via-red-500 to-purple-600 bg-clip-text text-transparent"
+                  animate={{
+                    scale: [1, 1.05, 1],
+                    textShadow: [
+                      "0 0 0px rgba(249, 115, 22, 0)",
+                      "0 0 20px rgba(249, 115, 22, 0.5)",
+                      "0 0 0px rgba(249, 115, 22, 0)"
+                    ]
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                >
                   OXO
-                </span>
+                </motion.span>
               </motion.h1>
               
               {/* Description avec effet typewriter responsive */}
@@ -243,33 +258,21 @@ function App() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mt-12 md:mt-20 px-4">
                 {[
                   {
-                    icon: (
-                      <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                    ),
+                    icon: <CheckCircle2 className="w-6 h-6 text-blue-600" />,
                     title: "Agents Vérifiés",
                     description: "Tous nos agents sont vérifiés et garantis actifs pour assurer la qualité des échanges.",
                     color: "rgba(59, 130, 246, 0.3)",
                     delay: 0.2
                   },
                   {
-                    icon: (
-                      <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                      </svg>
-                    ),
+                    icon: <MessageSquare className="w-6 h-6 text-green-600" />,
                     title: "Multi-Plateformes",
                     description: "Contactez des agents sur WhatsApp, WeChat et autres plateformes.",
                     color: "rgba(16, 185, 129, 0.3)",
                     delay: 0.4
                   },
                   {
-                    icon: (
-                      <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                      </svg>
-                    ),
+                    icon: <Zap className="w-6 h-6 text-purple-600" />,
                     title: "Accès Instantané",
                     description: "Contactez directement les agents via leur plateforme préférée en un clic.",
                     color: "rgba(139, 92, 246, 0.3)",
@@ -278,9 +281,9 @@ function App() {
                 ].map((feature, index) => (
                   <motion.div
                     key={index}
-                    className="glass-card p-8 text-center hover-lift group relative overflow-hidden"
-                    initial={{ opacity: 0, y: 60, rotateX: -15 }}
-                    animate={{ opacity: 1, y: 0, rotateX: 0 }}
+                    className="glass-card p-8 text-center group relative overflow-hidden"
+                    initial={{ opacity: 0, y: 60 }}
+                    animate={{ opacity: 1, y: 0 }}
                     transition={{ 
                       delay: feature.delay, 
                       duration: 0.8,
@@ -288,48 +291,30 @@ function App() {
                       stiffness: 100
                     }}
                     whileHover={{ 
-                      y: -12,
-                      rotateY: 5,
-                      scale: 1.03,
-                      transition: { duration: 0.3 }
+                      y: -6,
+                      transition: { duration: 0.2, ease: "easeOut" }
+                    }}
+                    style={{
+                      backfaceVisibility: 'hidden',
+                      WebkitFontSmoothing: 'antialiased',
+                      MozOsxFontSmoothing: 'grayscale',
+                      willChange: 'transform'
                     }}
                   >
                     {/* Particules supprimées pour plus de fluidité */}
 
                     {/* Icône avec effet lumineux */}
-                    <motion.div 
+                    <div 
                       className="w-14 h-14 rounded-xl flex items-center justify-center mb-6 mx-auto relative"
                       style={{ 
                         background: `linear-gradient(135deg, ${feature.color}, rgba(255,255,255,0.1))`
                       }}
-                      animate={{
-                        rotate: [0, 5, -5, 0],
-                        scale: [1, 1.05, 1]
-                      }}
-                      transition={{
-                        duration: 4,
-                        repeat: Infinity,
-                        ease: "easeInOut"
-                      }}
-                      whileHover={{ 
-                        scale: 1.2,
-                        rotate: [0, 10, -10, 0],
-                        transition: { duration: 0.3 }
-                      }}
                     >
                       {feature.icon}
                       
-                      {/* Anneaux orbitaux subtils */}
-                      <motion.div
-                        className="absolute inset-0 rounded-xl border border-white/20"
-                        animate={{ rotate: 360 }}
-                        transition={{
-                          duration: 8,
-                          repeat: Infinity,
-                          ease: "linear"
-                        }}
-                      />
-                    </motion.div>
+                      {/* Bordure statique */}
+                      <div className="absolute inset-0 rounded-xl border border-white/20" />
+                    </div>
                     
                     <motion.h3 
                       className="text-xl font-bold text-gray-900 mb-3 group-hover:text-orange-600 transition-colors relative"
@@ -370,74 +355,67 @@ function App() {
                 ))}
               </div>
 
-              <ScrollReveal variant="fadeInUp" delay={0.6} className="mt-20">
+              <div className="mt-20">
                 <div className="glass-card p-8 bg-gradient-to-r from-blue-50/50 to-orange-50/50 border-2 border-orange-200/30">
                   <div className="text-center">
-                    <motion.div
-                      className="w-16 h-16 bg-gradient-primary rounded-2xl flex items-center justify-center mx-auto mb-4"
-                      animate={{
-                        rotate: [0, 10, -10, 0],
-                        scale: [1, 1.05, 1]
-                      }}
-                      transition={{
-                        duration: 4,
-                        repeat: Infinity,
-                        ease: "easeInOut"
+                    <div 
+                      className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 relative"
+                      style={{ 
+                        background: `linear-gradient(135deg, rgba(249, 115, 22, 0.3), rgba(255,255,255,0.1))`
                       }}
                     >
-                      <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                      </svg>
-                    </motion.div>
+                      <Lock className="w-8 h-8 text-orange-600" />
+                      <div className="absolute inset-0 rounded-2xl border border-white/20" />
+                    </div>
                     
-                    <h3 className="text-2xl font-bold text-gray-900 mb-3">
-                      🔐 Accès Sécurisé Requis
+                    <h3 className="text-2xl font-bold text-gray-900 mb-3 text-center">
+                      Accès Sécurisé Requis
                     </h3>
                     <p className="text-gray-700 mb-6 text-lg">
                       Connectez-vous pour accéder à la base de données complète d'agents vérifiés.
                     </p>
                   </div>
                 </div>
-              </ScrollReveal>
+              </div>
 
               {/* Message d'accès Whop pour les non-connectés - NOUVEAU DESIGN */}
-              <ScrollReveal variant="fadeInUp" delay={0.8} className="mt-12">
+              <div className="mt-12">
                 <div className="max-w-2xl mx-auto">
                   <motion.div 
-                    className="glass-card p-10 bg-gradient-to-br from-orange-50/80 to-red-50/80 border-2 border-orange-200/60 text-center relative overflow-hidden"
+                    className="glass-card p-10 text-center relative overflow-hidden"
                     whileHover={{ scale: 1.02 }}
                     transition={{ duration: 0.3 }}
                   >
                     {/* Effet de fond lumineux */}
                     <div className="absolute inset-0 bg-gradient-to-r from-orange-400/5 via-transparent to-red-400/5" />
                     
-                    <motion.div
-                      className="flex items-center justify-center space-x-3 mb-6 relative z-10"
-                      animate={{
-                        y: [0, -4, 0]
-                      }}
-                      transition={{
-                        duration: 2.5,
-                        repeat: Infinity,
-                        ease: "easeInOut"
-                      }}
-                    >
-                      <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-red-500 rounded-2xl flex items-center justify-center shadow-xl">
-                        <span className="text-2xl">🔐</span>
+                    <div className="flex items-center justify-center space-x-3 mb-6 relative z-10">
+                      <div 
+                        className="w-16 h-16 rounded-2xl flex items-center justify-center shadow-xl relative"
+                        style={{ 
+                          background: `linear-gradient(135deg, rgba(249, 115, 22, 0.3), rgba(255,255,255,0.1))`
+                        }}
+                      >
+                        <Lock className="w-8 h-8 text-orange-600" />
+                        <div className="absolute inset-0 rounded-2xl border border-white/20" />
                       </div>
                       <div className="text-left">
                         <h3 className="text-3xl font-bold text-gray-900 mb-1">Besoin d'un accès ?</h3>
                         <p className="text-orange-600 font-semibold">Obtenez votre mot de passe maintenant</p>
                       </div>
-                    </motion.div>
+                    </div>
                     
                     <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 mb-8 border border-orange-200/50 relative z-10">
                       <p className="text-gray-800 text-lg leading-relaxed mb-4">
                         <span className="text-orange-600 font-bold">Accès sécurisé requis</span> pour consulter notre base de données d'agents vérifiés.
                       </p>
-                      <p className="text-gray-600">
+                      <p className="text-gray-600 mb-3">
                         Le mot de passe change régulièrement pour garantir la sécurité.
                         <br/><strong className="text-orange-700">Solution simple :</strong> Rejoignez notre communauté pour un accès permanent !
+                      </p>
+                      <p className="text-gray-500 text-sm italic border-t border-orange-200/30 pt-3">
+                        <HelpCircle className="w-4 h-4 inline text-orange-500 mr-1" />
+                        Des questions ? Plus d'infos disponibles sur notre plateforme.
                       </p>
                     </div>
                     
@@ -466,11 +444,8 @@ function App() {
                         }}
                       />
                       
-                      <div className="flex items-center space-x-4 relative z-10">
-                        <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
-                          <span className="text-2xl">🚀</span>
-                        </div>
-                        <div className="text-left">
+                      <div className="flex items-center justify-center space-x-3 relative z-10">
+                        <div className="text-center">
                           <div className="text-xl font-bold">OBTENIR L'ACCÈS MAINTENANT</div>
                           <div className="text-orange-100 text-sm font-medium">Rejoindre la communauté OXO</div>
                         </div>
@@ -485,11 +460,10 @@ function App() {
                     </motion.a>
                     
                     {/* Avantages en grille plus visible */}
-                    <div className="mt-8 grid grid-cols-3 gap-6 relative z-10">
+                    <div className="mt-8 grid grid-cols-2 gap-6 relative z-10">
                       {[
-                        { icon: "⚡", title: "Accès instantané", desc: "En 2 minutes" },
-                        { icon: "🛡️", title: "Support 24/7", desc: "Aide permanente" },
-                        { icon: "🔥", title: "Mises à jour", desc: "Toujours à jour" }
+                        { icon: <Shield className="w-4 h-4 text-blue-600" />, title: "Support 24/7", desc: "Aide permanente", color: "rgba(59, 130, 246, 0.3)" },
+                        { icon: <CheckCircle2 className="w-4 h-4 text-green-600" />, title: "Mises à jour", desc: "Toujours à jour", color: "rgba(16, 185, 129, 0.3)" }
                       ].map((item, index) => (
                         <motion.div
                           key={index}
@@ -497,16 +471,27 @@ function App() {
                           whileHover={{ scale: 1.05, y: -2 }}
                           transition={{ type: "spring", stiffness: 300 }}
                         >
-                          <div className="text-2xl mb-2">{item.icon}</div>
-                          <div className="font-bold text-gray-800 text-sm">{item.title}</div>
-                          <div className="text-gray-600 text-xs">{item.desc}</div>
+                          {/* Icône avec le même style que les 3 grands blocs */}
+                          <div 
+                            className="w-10 h-10 rounded-xl flex items-center justify-center mb-3 mx-auto relative"
+                            style={{ 
+                              background: `linear-gradient(135deg, ${item.color}, rgba(255,255,255,0.1))`
+                            }}
+                          >
+                            {item.icon}
+                            {/* Bordure statique comme les grands blocs */}
+                            <div className="absolute inset-0 rounded-xl border border-white/20" />
+                          </div>
+                          <div className="font-bold text-gray-800 text-sm text-center">{item.title}</div>
+                          <div className="text-gray-600 text-xs text-center">{item.desc}</div>
                         </motion.div>
                       ))}
                     </div>
                   </motion.div>
                 </div>
-              </ScrollReveal>
-            </ScrollReveal>
+              </div>
+
+            </div>
           </div>
         ) : (
           // Interface pour utilisateurs ayant accès au site
@@ -519,9 +504,9 @@ function App() {
                 exit={{ opacity: 0, x: 20 }}
                 transition={{ duration: 0.4, type: "spring", stiffness: 100 }}
               >
-                <ScrollReveal variant="slideRotate" delay={0.2}>
+                <div>
                   <NewAgentList />
-                </ScrollReveal>
+                </div>
               </motion.div>
             ) : (
               <motion.div
@@ -531,7 +516,7 @@ function App() {
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.4, type: "spring", stiffness: 100 }}
               >
-                <ScrollReveal variant="fadeInUp">
+                <div>
                   <div className="mb-8">
                     <motion.h1 
                       className="text-4xl font-bold text-gray-900 mb-3"
@@ -549,11 +534,11 @@ function App() {
                       Gérez les paramètres de sécurité et les mots de passe de la plateforme.
                     </motion.p>
                   </div>
-                </ScrollReveal>
+                </div>
 
-                <ScrollReveal variant="parallax" delay={0.2}>
+                <div>
                   <AdminDashboard />
-                </ScrollReveal>
+                </div>
               </motion.div>
             )}
           </div>
@@ -568,7 +553,7 @@ function App() {
       />
 
       {/* Footer moderne avec animations */}
-      <ScrollReveal variant="fadeInUp" className="mt-20">
+      <div className="mt-20">
         <footer className="glass-effect border-t border-gray-200/50 relative overflow-hidden">
           <div className="absolute inset-0 z-0">
             <ParticleBackground particleCount={10} animated={true} />
@@ -583,19 +568,8 @@ function App() {
               >
                 <motion.div 
                   className="w-8 h-8 bg-gradient-primary rounded-xl flex items-center justify-center"
-                  animate={{ 
-                    rotate: [0, 5, -5, 0],
-                    scale: [1, 1.1, 1]
-                  }}
-                  transition={{
-                    duration: 4,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                  }}
                 >
-                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 7v10c0 2.21 3.79 4 8.5 4s8.5-1.79 8.5-4V7M4 7c0 2.21 3.79 4 8.5 4s8.5-1.79 8.5-4M4 7c0-2.21 3.79-4 8.5-4s8.5 1.79 8.5 4" />
-                  </svg>
+                  <Database className="w-4 h-4 text-white" />
                 </motion.div>
                 <span className="text-2xl font-bold text-gradient animate-shimmer">OXO</span>
               </motion.div>
@@ -614,18 +588,17 @@ function App() {
                 staggerDelay={0.1}
               >
                 {[
-                  { icon: "🔒", text: "Données sécurisées" },
-                  { icon: "✅", text: "Agents vérifiés" },
-                  { icon: "⚡", text: "Accès instantané" }
+                  { icon: <Lock className="w-3 h-3 text-blue-500" />, text: "Données sécurisées" },
+                  { icon: <CheckCircle className="w-3 h-3 text-green-500" />, text: "Agents vérifiés" },
+                  { icon: <Zap className="w-3 h-3 text-purple-500" />, text: "Accès instantané" }
                 ].map((item, index) => (
-                  <motion.span
+                  <span
                     key={index}
-                    className="flex items-center space-x-1 hover:text-orange-500 transition-colors cursor-pointer"
-                    whileHover={{ scale: 1.1, y: -2 }}
+                    className="flex items-center space-x-1 text-gray-400 cursor-pointer"
                   >
                     <span>{item.icon}</span>
                     <span>{item.text}</span>
-                  </motion.span>
+                  </span>
                 ))}
               </StaggeredReveal>
             </div>
@@ -642,7 +615,7 @@ function App() {
             }}
           />
         </footer>
-      </ScrollReveal>
+      </div>
     </div>
   );
 };

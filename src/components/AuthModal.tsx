@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Lock, Shield, AlertCircle, Eye, EyeOff } from 'lucide-react';
+import { X, Lock, Shield, AlertCircle, Eye, EyeOff, Key, Rocket } from 'lucide-react';
 import { useAuthStore } from '@/stores/authStore';
 
 interface AuthModalProps {
@@ -99,8 +99,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   };
 
   const getDescription = () => {
-    if (mode === 'admin') return 'Entrez le mot de passe admin pour accéder aux fonctionnalités d\'édition';
-    return 'Entrez le mot de passe du site pour accéder à l\'annuaire d\'agents';
+    if (mode === 'admin') return 'Accès admin requis';
+    return 'Accès sécurisé requis';
   };
 
   return (
@@ -378,7 +378,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                                 ease: "easeInOut"
                               }}
                             >
-                              {mode === 'admin' ? '🔑' : ''}
+                              {mode === 'admin' ? <Key className="w-6 h-6 text-white" /> : ''}
                             </motion.span>
                             <span className="text-lg font-bold">
                               {mode === 'admin' ? 'Accéder au mode admin' : 'Accéder au site'}
@@ -399,86 +399,44 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   transition={{ delay: 0.8 }}
                 >
 
-                  {/* Message d'accès Whop - uniquement pour le mode site-password - NOUVEAU DESIGN */}
+                  {/* Message d'accès Whop - uniquement pour le mode site-password - VERSION SIMPLIFIÉE */}
                   {mode === 'site-password' && (
                     <motion.div 
-                      className="text-center bg-gradient-to-r from-orange-50/90 to-red-50/90 rounded-2xl p-8 border-2 border-orange-200/60 relative overflow-hidden"
+                      className="text-center bg-gradient-to-r from-orange-50/90 to-red-50/90 rounded-xl p-6 border border-orange-200/60 relative"
                       initial={{ opacity: 0, scale: 0.95 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ delay: 1 }}
                     >
-                      {/* Effet de brillance de fond */}
-                      <div className="absolute inset-0 bg-gradient-to-r from-orange-400/5 via-transparent to-red-400/5" />
-                      
-                      <motion.div
-                        className="flex items-center justify-center space-x-3 mb-6 relative z-10"
-                        animate={{
-                          y: [0, -2, 0]
-                        }}
-                        transition={{
-                          duration: 2.5,
-                          repeat: Infinity,
-                          ease: "easeInOut"
-                        }}
-                      >
-                        <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center shadow-lg">
-                          <span className="text-xl">🔐</span>
+                      <div className="flex items-center justify-center space-x-3 mb-4">
+                        <div 
+                          className="w-10 h-10 rounded-lg flex items-center justify-center relative"
+                          style={{ 
+                            background: `linear-gradient(135deg, rgba(249, 115, 22, 0.3), rgba(255,255,255,0.1))`
+                          }}
+                        >
+                          <Lock className="w-5 h-5 text-orange-600" />
+                          <div className="absolute inset-0 rounded-lg border border-white/20" />
                         </div>
-                        <div className="text-left">
-                          <h3 className="text-xl font-bold text-gray-900 leading-tight">Pas le bon mot de passe&nbsp;?</h3>
-                          <p className="text-orange-600 font-medium text-sm">Solution simple ci-dessous !</p>
+                        <div>
+                          <h3 className="text-lg font-bold text-gray-900">Pas d'accès ?</h3>
                         </div>
-                      </motion.div>
-                      
-                      <div className="bg-white/70 backdrop-blur-sm rounded-xl p-4 mb-6 border border-orange-200/50 relative z-10">
-                        <p className="text-sm text-gray-700 leading-relaxed">
-                          <span className="text-orange-600 font-bold">Mot de passe introuvable ?</span><br/>
-                          Rejoignez notre communauté pour <strong className="text-orange-700">un accès permanent</strong> !
-                        </p>
                       </div>
+                      
+                      <p className="text-sm text-gray-700 mb-4">
+                        <span className="text-orange-600 font-bold">Mot de passe changé ?</span> Rejoignez la communauté !
+                      </p>
                       
                       <motion.a
                         href="https://whop.com/oxo/presentation-oxo-XeNskuhecJ4ew0/app/"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group inline-flex items-center space-x-3 bg-gradient-to-r from-orange-500 via-orange-600 to-red-500 hover:from-orange-600 hover:via-orange-700 hover:to-red-600 text-white font-bold px-8 py-4 rounded-xl transition-all duration-300 shadow-xl hover:shadow-orange-500/40 relative z-10"
-                        whileHover={{ 
-                          scale: 1.05,
-                          y: -2,
-                          boxShadow: "0 15px 30px rgba(249, 115, 22, 0.4)"
-                        }}
-                        whileTap={{ scale: 0.95 }}
+                        className="inline-flex items-center space-x-2 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold px-6 py-3 rounded-lg transition-all duration-300 shadow-lg hover:shadow-orange-500/40"
+                        whileHover={{ scale: 1.03, y: -1 }}
+                        whileTap={{ scale: 0.97 }}
                       >
-                        {/* Effet de brillance */}
-                        <motion.div
-                          className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -skew-x-12"
-                          animate={{ x: ["-100%", "200%"] }}
-                          transition={{
-                            duration: 3,
-                            repeat: Infinity,
-                            repeatDelay: 2,
-                            ease: "easeInOut"
-                          }}
-                        />
-                        
-                        <div className="flex items-center space-x-3 relative z-10">
-                          <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
-                            <span className="text-lg">🚀</span>
-                          </div>
-                          <div className="text-left">
-                            <div className="font-bold">OBTENIR L'ACCÈS</div>
-                            <div className="text-orange-100 text-xs">Communauté OXO</div>
-                          </div>
-                          <motion.div
-                            animate={{ x: [0, 5, 0] }}
-                            transition={{ duration: 2, repeat: Infinity }}
-                            className="text-lg"
-                          >
-                            →
-                          </motion.div>
-                        </div>
+                        <span>OBTENIR L'ACCÈS</span>
+                        <span>→</span>
                       </motion.a>
-                      
                     </motion.div>
                   )}
                 </motion.div>

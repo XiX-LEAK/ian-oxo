@@ -270,10 +270,7 @@ export const AgentList: React.FC<AgentListProps> = ({ onEditAgent, onCreateAgent
             {/* Barre de recherche améliorée */}
             <div className="relative">
               <div className="relative">
-                <svg className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 z-10" fill="none" stroke="#000000" viewBox="0 0 24 24" strokeWidth={2.5}>
-                  <circle cx="11" cy="11" r="8"></circle>
-                  <path d="m21 21-4.35-4.35"></path>
-                </svg>
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 z-10 text-gray-600" />
                 <input
                   type="text"
                   placeholder="Recherche intelligente : nom, services, description, langues, spécialités..."
@@ -323,10 +320,7 @@ export const AgentList: React.FC<AgentListProps> = ({ onEditAgent, onCreateAgent
           
           <div className="relative z-10">
             <div className="flex justify-center mb-4">
-              <svg className="w-16 h-16" fill="none" stroke="#000000" viewBox="0 0 24 24" strokeWidth={1.5}>
-                <circle cx="11" cy="11" r="8"></circle>
-                <path d="m21 21-4.35-4.35"></path>
-              </svg>
+              <Search className="w-16 h-16 text-gray-400" />
             </div>
             <h3 className="text-xl font-semibold text-gray-800 mb-2">
               Aucun résultat pour cette recherche

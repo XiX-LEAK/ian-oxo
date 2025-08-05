@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface ScrollingCategoriesProps {
   categories: string[];
@@ -153,18 +154,14 @@ export const ScrollingCategories: React.FC<ScrollingCategoriesProps> = ({
             className="p-1 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
             title="Précédent"
           >
-            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
+            <ChevronLeft className="w-3 h-3" />
           </button>
           <button
             onClick={() => setCurrentIndex((prev) => (prev + 1) % categories.length)}
             className="p-1 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
             title="Suivant"
           >
-            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
+            <ChevronRight className="w-3 h-3" />
           </button>
         </motion.div>
       )}
