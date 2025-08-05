@@ -301,20 +301,20 @@ export const NewAgentList: React.FC = () => {
             <div className="flex items-center gap-3 mb-2">
               <h3 className="text-lg font-bold text-gray-900 truncate">{agent.name}</h3>
               
-              {/* Badges de contact compacts */}
+              {/* Badges de contact compacts - VISIBLES POUR TOUS */}
               <div className="flex gap-1">
                 {agent.email && (
-                  <div className="w-6 h-6 bg-green-100 rounded-lg flex items-center justify-center">
+                  <div className="w-6 h-6 bg-green-100 rounded-lg flex items-center justify-center" title={agent.email}>
                     <Mail className="w-3 h-3 text-green-600" />
                   </div>
                 )}
-                {agent.phoneNumber && mode === 'admin' && (
-                  <div className="w-6 h-6 bg-blue-100 rounded-lg flex items-center justify-center">
+                {agent.phoneNumber && (
+                  <div className="w-6 h-6 bg-blue-100 rounded-lg flex items-center justify-center" title={agent.phoneNumber}>
                     <Phone className="w-3 h-3 text-blue-600" />
                   </div>
                 )}
-                {agent.websiteUrl && mode === 'admin' && (
-                  <div className="w-6 h-6 bg-purple-100 rounded-lg flex items-center justify-center">
+                {agent.websiteUrl && (
+                  <div className="w-6 h-6 bg-purple-100 rounded-lg flex items-center justify-center" title={agent.websiteUrl}>
                     <Globe className="w-3 h-3 text-purple-600" />
                   </div>
                 )}
@@ -546,10 +546,10 @@ export const NewAgentList: React.FC = () => {
                       <h3 className="text-lg font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">{agent.name}</h3>
                     </div>
 
-                    {/* INFORMATIONS DE CONTACT - Centrées et compactes pour grille */}
+                    {/* INFORMATIONS DE CONTACT - Centrées et compactes pour grille - VISIBLES POUR TOUS */}
                     <div className="flex flex-wrap justify-center gap-2 mb-4">
-                      {/* TÉLÉPHONE - ADMIN SEULEMENT */}
-                      {agent.phoneNumber && mode === 'admin' && (
+                      {/* TÉLÉPHONE - VISIBLE POUR TOUS */}
+                      {agent.phoneNumber && (
                         <motion.div 
                           className="flex items-center gap-1 px-2 py-1 bg-gradient-to-r from-blue-100/60 to-blue-200/40 rounded-lg border border-blue-200/30 backdrop-blur-sm"
                           whileHover={{ scale: 1.05 }}
@@ -572,8 +572,8 @@ export const NewAgentList: React.FC = () => {
                         </motion.div>
                       )}
                       
-                      {/* SITE WEB - ADMIN SEULEMENT */}
-                      {agent.websiteUrl && mode === 'admin' && (
+                      {/* SITE WEB - VISIBLE POUR TOUS */}
+                      {agent.websiteUrl && (
                         <motion.div 
                           className="flex items-center gap-1 px-2 py-1 bg-gradient-to-r from-purple-100/60 to-purple-200/40 rounded-lg border border-purple-200/30 backdrop-blur-sm"
                           whileHover={{ scale: 1.05 }}
