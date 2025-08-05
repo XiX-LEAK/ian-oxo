@@ -512,78 +512,79 @@ export const NewAgentList: React.FC = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.2 }}
-        className={viewMode === 'grid' ? 'grid gap-8' : 'space-y-4'}
+        className={viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6' : 'space-y-4'}
       >
         <AnimatePresence mode="wait">
           {filteredAgents.map((agent, index) => 
             viewMode === 'list' ? (
               <AgentListView key={agent.id} agent={agent} index={index} />
             ) : (
-              // VUE EN BLOCS (existante)
+              // VUE EN BLOCS - GRILLE (adaptée pour côte à côte)
               <motion.div
                 key={agent.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
-                transition={{ delay: index * 0.05 }}
-                className="bg-gradient-to-br from-white/70 via-orange-50/30 to-white/60 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/40 p-8 hover:shadow-orange-200/50 hover:from-white/80 hover:to-orange-50/40 transition-all duration-500 overflow-hidden relative group"
+                transition={{ delay: index * 0.03 }}
+                className="bg-gradient-to-br from-white/70 via-orange-50/30 to-white/60 backdrop-blur-xl rounded-2xl shadow-xl border border-white/40 p-6 hover:shadow-orange-200/50 hover:from-white/80 hover:to-orange-50/40 transition-all duration-300 overflow-hidden relative group h-fit"
               >
                 {/* Effet de brillance au hover */}
                 <motion.div
                   className="absolute inset-0 bg-gradient-to-r from-transparent via-orange-200/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out"
                 />
                 
-                <div className="flex items-start justify-between relative z-10">
+                <div className="relative z-10">
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-3 mb-3">
+                    {/* Header avec avatar et nom centré pour grille */}
+                    <div className="text-center mb-4">
                       <motion.div 
-                        className="w-16 h-16 bg-gradient-to-br from-orange-500 via-red-500 to-purple-600 rounded-2xl flex items-center justify-center text-white font-bold text-xl shadow-xl hover:shadow-orange-300/60 transition-all duration-300 relative overflow-hidden"
+                        className="w-14 h-14 bg-gradient-to-br from-orange-500 via-red-500 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-lg hover:shadow-orange-300/60 transition-all duration-300 mx-auto mb-3"
                         whileHover={{ scale: 1.1, rotate: 5 }}
                       >
-                        {/* Particules supprimées pour plus de fluidité */}
-                        <span className="relative z-10">{agent.name.charAt(0).toUpperCase()}</span>
+                        <span>{agent.name.charAt(0).toUpperCase()}</span>
                       </motion.div>
-                      <div>
-                        <h3 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">{agent.name}</h3>
-                      </div>
+                      <h3 className="text-lg font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">{agent.name}</h3>
                     </div>
 
-                    {/* INFORMATIONS DE CONTACT */}
-                    <div className="flex flex-wrap gap-3 mb-6">
+                    {/* INFORMATIONS DE CONTACT - Centrées et compactes pour grille */}
+                    <div className="flex flex-wrap justify-center gap-2 mb-4">
                       {/* TÉLÉPHONE - ADMIN SEULEMENT */}
                       {agent.phoneNumber && mode === 'admin' && (
                         <motion.div 
-                          className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-blue-100/60 to-blue-200/40 rounded-xl border border-blue-200/30 backdrop-blur-sm"
+                          className="flex items-center gap-1 px-2 py-1 bg-gradient-to-r from-blue-100/60 to-blue-200/40 rounded-lg border border-blue-200/30 backdrop-blur-sm"
                           whileHover={{ scale: 1.05 }}
+                          title={agent.phoneNumber}
                         >
-                          <Phone className="w-4 h-4 text-blue-600" />
-                          <span className="text-blue-700 font-medium text-sm">{agent.phoneNumber}</span>
+                          <Phone className="w-3 h-3 text-blue-600" />
+                          <span className="text-blue-700 font-medium text-xs truncate max-w-20">{agent.phoneNumber}</span>
                         </motion.div>
                       )}
                       
                       {/* EMAIL - VISIBLE POUR TOUS */}
                       {agent.email && (
                         <motion.div 
-                          className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-green-100/60 to-green-200/40 rounded-xl border border-green-200/30 backdrop-blur-sm"
+                          className="flex items-center gap-1 px-2 py-1 bg-gradient-to-r from-green-100/60 to-green-200/40 rounded-lg border border-green-200/30 backdrop-blur-sm"
                           whileHover={{ scale: 1.05 }}
+                          title={agent.email}
                         >
-                          <Mail className="w-4 h-4 text-green-600" />
-                          <span className="text-green-700 font-medium text-sm">{agent.email}</span>
+                          <Mail className="w-3 h-3 text-green-600" />
+                          <span className="text-green-700 font-medium text-xs truncate max-w-24">{agent.email}</span>
                         </motion.div>
                       )}
                       
                       {/* SITE WEB - ADMIN SEULEMENT */}
                       {agent.websiteUrl && mode === 'admin' && (
                         <motion.div 
-                          className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-purple-100/60 to-purple-200/40 rounded-xl border border-purple-200/30 backdrop-blur-sm"
+                          className="flex items-center gap-1 px-2 py-1 bg-gradient-to-r from-purple-100/60 to-purple-200/40 rounded-lg border border-purple-200/30 backdrop-blur-sm"
                           whileHover={{ scale: 1.05 }}
                         >
-                          <Globe className="w-4 h-4 text-purple-600" />
+                          <Globe className="w-3 h-3 text-purple-600" />
                           <a 
                             href={agent.websiteUrl.startsWith('http') ? agent.websiteUrl : `https://${agent.websiteUrl}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-purple-700 hover:text-purple-800 font-medium text-sm break-all"
+                            className="text-purple-700 hover:text-purple-800 font-medium text-xs truncate max-w-20"
+                            title={agent.websiteUrl}
                           >
                             {agent.websiteUrl}
                           </a>
@@ -631,40 +632,40 @@ export const NewAgentList: React.FC = () => {
                       </div>
                     )}
 
-                    {/* DATE */}
-                    <div className="flex items-center gap-2 text-xs text-gray-500">
+                    {/* DATE - Centrée pour grille */}
+                    <div className="flex items-center justify-center gap-1 text-xs text-gray-500 mb-4">
                       <Clock className="w-3 h-3" />
-                      Ajouté le {new Date(agent.created_at || agent.created).toLocaleDateString('fr-FR')}
+                      {new Date(agent.created_at || agent.created).toLocaleDateString('fr-FR')}
                     </div>
-                  </div>
 
-                  {/* ACTIONS - ADMIN SEULEMENT */}
-                  {mode === 'admin' && (
-                    <div className="flex gap-2 ml-4">
-                      <motion.button
-                        onClick={() => {
-                          setEditingAgent(agent);
-                          setShowForm(true);
-                        }}
-                        className="w-10 h-10 bg-orange-100/80 text-orange-600 rounded-xl hover:bg-orange-200/80 backdrop-blur-sm transition-all duration-300 flex items-center justify-center shadow-sm"
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                        title="Modifier"
-                      >
-                        <Edit className="w-4 h-4" />
-                      </motion.button>
-                      
-                      <motion.button
-                        onClick={() => handleDelete(agent)}
-                        className="w-10 h-10 bg-red-100/80 text-red-600 rounded-xl hover:bg-red-200/80 backdrop-blur-sm transition-all duration-300 flex items-center justify-center shadow-sm"
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                        title="Supprimer"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </motion.button>
-                    </div>
-                  )}
+                    {/* ACTIONS - ADMIN SEULEMENT - Centrées pour grille */}
+                    {mode === 'admin' && (
+                      <div className="flex gap-2 justify-center">
+                        <motion.button
+                          onClick={() => {
+                            setEditingAgent(agent);
+                            setShowForm(true);
+                          }}
+                          className="w-8 h-8 bg-orange-100/80 text-orange-600 rounded-lg hover:bg-orange-200/80 backdrop-blur-sm transition-all duration-300 flex items-center justify-center shadow-sm"
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                          title="Modifier"
+                        >
+                          <Edit className="w-3 h-3" />
+                        </motion.button>
+                        
+                        <motion.button
+                          onClick={() => handleDelete(agent)}
+                          className="w-8 h-8 bg-red-100/80 text-red-600 rounded-lg hover:bg-red-200/80 backdrop-blur-sm transition-all duration-300 flex items-center justify-center shadow-sm"
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                          title="Supprimer"
+                        >
+                          <Trash2 className="w-3 h-3" />
+                        </motion.button>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </motion.div>
             )
