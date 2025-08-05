@@ -399,55 +399,102 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   transition={{ delay: 0.8 }}
                 >
 
-                  {/* Message d'accès Whop - uniquement pour le mode site-password */}
+                  {/* Message d'accès Whop - uniquement pour le mode site-password - NOUVEAU DESIGN */}
                   {mode === 'site-password' && (
                     <motion.div 
-                      className="text-center bg-gradient-to-r from-purple-50 to-blue-50 rounded-xl p-6 border border-purple-200"
+                      className="text-center bg-gradient-to-r from-orange-50/90 to-red-50/90 rounded-2xl p-8 border-2 border-orange-200/60 relative overflow-hidden"
                       initial={{ opacity: 0, scale: 0.95 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ delay: 1 }}
                     >
+                      {/* Effet de brillance de fond */}
+                      <div className="absolute inset-0 bg-gradient-to-r from-orange-400/5 via-transparent to-red-400/5" />
+                      
                       <motion.div
-                        className="flex items-center justify-center space-x-2 mb-4"
+                        className="flex items-center justify-center space-x-3 mb-6 relative z-10"
                         animate={{
                           y: [0, -2, 0]
                         }}
                         transition={{
-                          duration: 2,
+                          duration: 2.5,
                           repeat: Infinity,
                           ease: "easeInOut"
                         }}
                       >
-                        <span className="text-2xl">🔐</span>
-                        <h3 className="font-bold text-gray-800">Pas d'accès ?</h3>
+                        <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center shadow-lg">
+                          <span className="text-xl">🔐</span>
+                        </div>
+                        <div className="text-left">
+                          <h3 className="text-xl font-bold text-gray-900">Pas le bon mot de passe ?</h3>
+                          <p className="text-orange-600 font-medium text-sm">Solution simple ci-dessous !</p>
+                        </div>
                       </motion.div>
-                      <p className="text-sm text-gray-600 mb-4 leading-relaxed">
-                        Le <strong>mot de passe change régulièrement</strong> pour la sécurité.<br/>
-                        Rejoignez notre <strong>communauté exclusive</strong> pour obtenir l'accès !
-                      </p>
+                      
+                      <div className="bg-white/70 backdrop-blur-sm rounded-xl p-4 mb-6 border border-orange-200/50 relative z-10">
+                        <p className="text-sm text-gray-700 leading-relaxed">
+                          <span className="text-orange-600 font-bold">Mot de passe introuvable ?</span><br/>
+                          Rejoignez notre communauté pour <strong className="text-orange-700">un accès permanent</strong> !
+                        </p>
+                      </div>
+                      
                       <motion.a
                         href="https://whop.com/oxo/presentation-oxo-XeNskuhecJ4ew0/app/"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center space-x-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-bold px-6 py-3 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl"
+                        className="group inline-flex items-center space-x-3 bg-gradient-to-r from-orange-500 via-orange-600 to-red-500 hover:from-orange-600 hover:via-orange-700 hover:to-red-600 text-white font-bold px-8 py-4 rounded-xl transition-all duration-300 shadow-xl hover:shadow-orange-500/40 relative z-10"
                         whileHover={{ 
                           scale: 1.05,
-                          boxShadow: "0 10px 25px rgba(147, 51, 234, 0.3)"
+                          y: -2,
+                          boxShadow: "0 15px 30px rgba(249, 115, 22, 0.4)"
                         }}
                         whileTap={{ scale: 0.95 }}
                       >
-                        <span className="text-xl">🚀</span>
-                        <span>Rejoindre la communauté OXO</span>
-                        <motion.span
-                          animate={{ x: [0, 3, 0] }}
-                          transition={{ duration: 1.5, repeat: Infinity }}
-                        >
-                          →
-                        </motion.span>
+                        {/* Effet de brillance */}
+                        <motion.div
+                          className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -skew-x-12"
+                          animate={{ x: ["-100%", "200%"] }}
+                          transition={{
+                            duration: 3,
+                            repeat: Infinity,
+                            repeatDelay: 2,
+                            ease: "easeInOut"
+                          }}
+                        />
+                        
+                        <div className="flex items-center space-x-3 relative z-10">
+                          <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+                            <span className="text-lg">🚀</span>
+                          </div>
+                          <div className="text-left">
+                            <div className="font-bold">OBTENIR L'ACCÈS</div>
+                            <div className="text-orange-100 text-xs">Communauté OXO</div>
+                          </div>
+                          <motion.div
+                            animate={{ x: [0, 5, 0] }}
+                            transition={{ duration: 2, repeat: Infinity }}
+                            className="text-lg"
+                          >
+                            →
+                          </motion.div>
+                        </div>
                       </motion.a>
-                      <p className="text-xs text-gray-500 mt-3">
-                        Accès immédiat • Support 24/7 • Communauté active
-                      </p>
+                      
+                      <div className="mt-6 grid grid-cols-3 gap-3 text-xs relative z-10">
+                        {[
+                          { icon: "⚡", text: "Accès immédiat" },
+                          { icon: "🛡️", text: "Support 24/7" },
+                          { icon: "🔥", text: "Toujours à jour" }
+                        ].map((item, index) => (
+                          <motion.div
+                            key={index}
+                            className="bg-white/60 backdrop-blur-sm rounded-lg p-3 border border-orange-100"
+                            whileHover={{ scale: 1.05 }}
+                          >
+                            <div className="text-lg mb-1">{item.icon}</div>
+                            <div className="font-medium text-gray-700">{item.text}</div>
+                          </motion.div>
+                        ))}
+                      </div>
                     </motion.div>
                   )}
                 </motion.div>

@@ -538,16 +538,19 @@ function App() {
                 </div>
               </ScrollReveal>
 
-              {/* Message d'accès Whop pour les non-connectés */}
+              {/* Message d'accès Whop pour les non-connectés - NOUVEAU DESIGN */}
               <ScrollReveal variant="fadeInUp" delay={0.8} className="mt-12">
-                <div className="max-w-lg mx-auto">
+                <div className="max-w-2xl mx-auto">
                   <motion.div 
-                    className="glass-card p-8 bg-gradient-to-r from-purple-50/70 to-blue-50/70 border-2 border-purple-200/40 text-center"
+                    className="glass-card p-10 bg-gradient-to-br from-orange-50/80 to-red-50/80 border-2 border-orange-200/60 text-center relative overflow-hidden"
                     whileHover={{ scale: 1.02 }}
                     transition={{ duration: 0.3 }}
                   >
+                    {/* Effet de fond lumineux */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-orange-400/5 via-transparent to-red-400/5" />
+                    
                     <motion.div
-                      className="flex items-center justify-center space-x-3 mb-4"
+                      className="flex items-center justify-center space-x-3 mb-6 relative z-10"
                       animate={{
                         y: [0, -4, 0]
                       }}
@@ -557,50 +560,86 @@ function App() {
                         ease: "easeInOut"
                       }}
                     >
-                      <span className="text-3xl">🔐</span>
-                      <h3 className="text-2xl font-bold text-gray-900">Pas d'accès ?</h3>
+                      <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-red-500 rounded-2xl flex items-center justify-center shadow-xl">
+                        <span className="text-2xl">🔐</span>
+                      </div>
+                      <div className="text-left">
+                        <h3 className="text-3xl font-bold text-gray-900 mb-1">Besoin d'un accès ?</h3>
+                        <p className="text-orange-600 font-semibold">Obtenez votre mot de passe maintenant</p>
+                      </div>
                     </motion.div>
                     
-                    <p className="text-gray-700 mb-6 leading-relaxed">
-                      Le <strong className="text-purple-700">mot de passe change régulièrement</strong> pour garantir la sécurité de notre plateforme.<br/>
-                      Rejoignez notre <strong className="text-blue-700">communauté exclusive</strong> pour obtenir l'accès permanent !
-                    </p>
+                    <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 mb-8 border border-orange-200/50 relative z-10">
+                      <p className="text-gray-800 text-lg leading-relaxed mb-4">
+                        <span className="text-orange-600 font-bold">Accès sécurisé requis</span> pour consulter notre base de données d'agents vérifiés.
+                      </p>
+                      <p className="text-gray-600">
+                        Le mot de passe change régulièrement pour garantir la sécurité.
+                        <br/><strong className="text-orange-700">Solution simple :</strong> Rejoignez notre communauté pour un accès permanent !
+                      </p>
+                    </div>
                     
+                    {/* Bouton Call-to-Action plus explicite */}
                     <motion.a
                       href="https://whop.com/oxo/presentation-oxo-XeNskuhecJ4ew0/app/"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center space-x-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-bold px-8 py-4 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-2xl"
+                      className="group inline-flex items-center space-x-4 bg-gradient-to-r from-orange-500 via-orange-600 to-red-500 hover:from-orange-600 hover:via-orange-700 hover:to-red-600 text-white font-bold px-10 py-5 rounded-2xl transition-all duration-300 shadow-2xl hover:shadow-orange-500/40 relative z-10 text-lg"
                       whileHover={{ 
                         scale: 1.05,
-                        boxShadow: "0 20px 40px rgba(147, 51, 234, 0.4)"
+                        y: -3,
+                        boxShadow: "0 25px 50px rgba(249, 115, 22, 0.4)"
                       }}
                       whileTap={{ scale: 0.95 }}
                     >
-                      <span className="text-2xl">🚀</span>
-                      <span className="text-lg">Rejoindre la communauté OXO</span>
-                      <motion.span
-                        animate={{ x: [0, 5, 0] }}
-                        transition={{ duration: 1.5, repeat: Infinity }}
-                        className="text-xl"
-                      >
-                        →
-                      </motion.span>
+                      {/* Effet de brillance */}
+                      <motion.div
+                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -skew-x-12"
+                        animate={{ x: ["-100%", "200%"] }}
+                        transition={{
+                          duration: 3,
+                          repeat: Infinity,
+                          repeatDelay: 2,
+                          ease: "easeInOut"
+                        }}
+                      />
+                      
+                      <div className="flex items-center space-x-4 relative z-10">
+                        <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                          <span className="text-2xl">🚀</span>
+                        </div>
+                        <div className="text-left">
+                          <div className="text-xl font-bold">OBTENIR L'ACCÈS MAINTENANT</div>
+                          <div className="text-orange-100 text-sm font-medium">Rejoindre la communauté OXO</div>
+                        </div>
+                        <motion.div
+                          animate={{ x: [0, 8, 0] }}
+                          transition={{ duration: 2, repeat: Infinity }}
+                          className="text-2xl"
+                        >
+                          →
+                        </motion.div>
+                      </div>
                     </motion.a>
                     
-                    <div className="mt-6 grid grid-cols-3 gap-4 text-xs text-gray-600">
-                      <div className="flex flex-col items-center">
-                        <span className="text-lg mb-1">⚡</span>
-                        <span>Accès instantané</span>
-                      </div>
-                      <div className="flex flex-col items-center">
-                        <span className="text-lg mb-1">🛡️</span>
-                        <span>Support 24/7</span>
-                      </div>
-                      <div className="flex flex-col items-center">
-                        <span className="text-lg mb-1">🔥</span>
-                        <span>Mises à jour exclusives</span>
-                      </div>
+                    {/* Avantages en grille plus visible */}
+                    <div className="mt-8 grid grid-cols-3 gap-6 relative z-10">
+                      {[
+                        { icon: "⚡", title: "Accès instantané", desc: "En 2 minutes" },
+                        { icon: "🛡️", title: "Support 24/7", desc: "Aide permanente" },
+                        { icon: "🔥", title: "Mises à jour", desc: "Toujours à jour" }
+                      ].map((item, index) => (
+                        <motion.div
+                          key={index}
+                          className="bg-white/60 backdrop-blur-sm rounded-xl p-4 border border-orange-100"
+                          whileHover={{ scale: 1.05, y: -2 }}
+                          transition={{ type: "spring", stiffness: 300 }}
+                        >
+                          <div className="text-2xl mb-2">{item.icon}</div>
+                          <div className="font-bold text-gray-800 text-sm">{item.title}</div>
+                          <div className="text-gray-600 text-xs">{item.desc}</div>
+                        </motion.div>
+                      ))}
                     </div>
                   </motion.div>
                 </div>
