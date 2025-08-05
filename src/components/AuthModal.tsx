@@ -398,31 +398,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.8 }}
                 >
-                  <div className="text-center bg-gradient-to-r from-orange-50 to-red-50 rounded-xl p-6 border border-orange-100">
-                    <motion.div
-                      className="flex items-center justify-center space-x-3 mb-3"
-                      animate={{
-                        scale: [1, 1.05, 1]
-                      }}
-                      transition={{
-                        duration: 2,
-                        repeat: Infinity,
-                        ease: "easeInOut"
-                      }}
-                    >
-                      <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                      <span className="text-sm font-bold text-gray-700 uppercase tracking-wide">
-                        Connexion Sécurisée
-                      </span>
-                    </motion.div>
-                    <p className="text-sm text-gray-600 font-medium leading-relaxed">
-                      {mode === 'admin' ? (
-                        <><strong>Panel d'administration</strong> • Gestion complète de la plateforme</>
-                      ) : (
-                        <>✨ <strong>Accès exclusif</strong> • Base de données d'agents vérifiés</>
-                      )}
-                    </p>
-                  </div>
 
                   {/* Message d'accès Whop - uniquement pour le mode site-password */}
                   {mode === 'site-password' && (
