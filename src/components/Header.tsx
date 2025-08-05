@@ -34,6 +34,8 @@ export const Header: React.FC<HeaderProps> = ({ currentView, onViewChange }) => 
   };
 
   const handleLoginClick = () => {
+    // Scroll vers le haut avant d'ouvrir le modal
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     setAuthMode('site-password');
     setShowAuthModal(true);
   };

@@ -19,7 +19,6 @@ import type { Agent } from '@/types/agent';
 
 function App() {
   const [currentView, setCurrentView] = useState<'agents' | 'admin'>('agents');
-  const [isLoading, setIsLoading] = useState(true);
   const [editingAgent, setEditingAgent] = useState<Agent | null>(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
 
@@ -35,21 +34,10 @@ function App() {
     initializeAuth();
   }, [initializeAuth]);
 
-  // Simulation du chargement initial - Réduit pour plus de fluidité
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, []);
-
   // Charger les agents au démarrage
   useEffect(() => {
-    if (!isLoading) {
-      loadAgents();
-    }
-  }, [isLoading, loadAgents]);
+    loadAgents();
+  }, [loadAgents]);
 
   // Rediriger vers agents si pas admin
   useEffect(() => {
@@ -86,48 +74,6 @@ function App() {
 
   if (isPasswordReset) {
     return <PasswordReset />;
-  }
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-orange-50/30 flex items-center justify-center relative">
-        {/* Suppression des particules pour un chargement plus fluide */}
-        
-        <motion.div 
-          className="text-center relative z-10"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          {/* Logo simplifié */}
-          <motion.div 
-            className="w-16 h-16 bg-gradient-primary rounded-2xl flex items-center justify-center mb-4 mx-auto"
-            animate={{ 
-              rotate: [0, 360]
-            }}
-            transition={{
-              duration: 2,
-              repeat: Infinity,
-              ease: "linear"
-            }}
-          >
-            <span className="text-2xl text-white font-bold">O</span>
-          </motion.div>
-          
-          {/* Titre simplifié */}
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">
-            OXO
-          </h2>
-          
-          <p className="text-gray-600 mb-4">
-            Chargement...
-          </p>
-          
-          {/* Spinner simple */}
-          <div className="w-8 h-8 border-3 border-gray-200 border-t-orange-500 rounded-full animate-spin mx-auto"></div>
-        </motion.div>
-      </div>
-    );
   }
 
   return (
@@ -356,68 +302,129 @@ function App() {
               </div>
 
               <div className="mt-20">
-                <div className="glass-card p-8 bg-gradient-to-r from-blue-50/50 to-orange-50/50 border-2 border-orange-200/30">
-                  <div className="text-center">
-                    <div 
-                      className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 relative"
-                      style={{ 
-                        background: `linear-gradient(135deg, rgba(249, 115, 22, 0.3), rgba(255,255,255,0.1))`
-                      }}
-                    >
-                      <Lock className="w-8 h-8 text-orange-600" />
-                      <div className="absolute inset-0 rounded-2xl border border-white/20" />
-                    </div>
-                    
-                    <h3 className="text-2xl font-bold text-gray-900 mb-3 text-center">
-                      Accès Sécurisé Requis
-                    </h3>
-                    <p className="text-gray-700 mb-6 text-lg">
-                      Connectez-vous pour accéder à la base de données complète d'agents vérifiés.
-                    </p>
+                <motion.div 
+                  className="glass-card p-8 text-center group relative overflow-hidden"
+                  initial={{ opacity: 0, y: 60 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ 
+                    delay: 0.8, 
+                    duration: 0.8,
+                    type: "spring",
+                    stiffness: 100
+                  }}
+                  whileHover={{ 
+                    y: -6,
+                    transition: { duration: 0.2, ease: "easeOut" }
+                  }}
+                  style={{
+                    backfaceVisibility: 'hidden',
+                    WebkitFontSmoothing: 'antialiased',
+                    MozOsxFontSmoothing: 'grayscale',
+                    willChange: 'transform'
+                  }}
+                >
+                  <div 
+                    className="w-14 h-14 rounded-xl flex items-center justify-center mb-6 mx-auto relative"
+                    style={{ 
+                      background: `linear-gradient(135deg, rgba(249, 115, 22, 0.3), rgba(255,255,255,0.1))`
+                    }}
+                  >
+                    <Lock className="w-6 h-6 text-orange-600" />
+                    <div className="absolute inset-0 rounded-xl border border-white/20" />
                   </div>
-                </div>
+                  
+                  <motion.h3 
+                    className="text-xl font-bold text-gray-900 mb-3 group-hover:text-orange-600 transition-colors relative"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 1.1 }}
+                  >
+                    Accès Sécurisé Requis
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-r from-transparent via-orange-400/10 to-transparent opacity-0 group-hover:opacity-100"
+                      animate={{ x: ["-100%", "100%"] }}
+                      transition={{ duration: 1.5, ease: "easeInOut" }}
+                    />
+                  </motion.h3>
+                  
+                  <motion.p 
+                    className="text-gray-600 text-sm leading-relaxed"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 1.3 }}
+                  >
+                    Connectez-vous pour accéder à la base de données complète d'agents vérifiés.
+                  </motion.p>
+
+                  <motion.div
+                    className="absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-orange-500 to-purple-500 rounded-full"
+                    initial={{ width: "0%" }}
+                    animate={{ width: "100%" }}
+                    transition={{ 
+                      delay: 1.6, 
+                      duration: 1.2,
+                      ease: "easeOut"
+                    }}
+                  />
+                </motion.div>
               </div>
 
               {/* Message d'accès Whop pour les non-connectés - NOUVEAU DESIGN */}
               <div className="mt-12">
                 <div className="max-w-2xl mx-auto">
                   <motion.div 
-                    className="glass-card p-10 text-center relative overflow-hidden"
-                    whileHover={{ scale: 1.02 }}
-                    transition={{ duration: 0.3 }}
+                    className="glass-card p-8 text-center group relative overflow-hidden"
+                    initial={{ opacity: 0, y: 60 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ 
+                      delay: 1.0, 
+                      duration: 0.8,
+                      type: "spring",
+                      stiffness: 100
+                    }}
+                    whileHover={{ 
+                      y: -6,
+                      transition: { duration: 0.2, ease: "easeOut" }
+                    }}
+                    style={{
+                      backfaceVisibility: 'hidden',
+                      WebkitFontSmoothing: 'antialiased',
+                      MozOsxFontSmoothing: 'grayscale',
+                      willChange: 'transform'
+                    }}
                   >
-                    {/* Effet de fond lumineux */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-orange-400/5 via-transparent to-red-400/5" />
-                    
-                    <div className="flex items-center justify-center space-x-3 mb-6 relative z-10">
-                      <div 
-                        className="w-16 h-16 rounded-2xl flex items-center justify-center shadow-xl relative"
-                        style={{ 
-                          background: `linear-gradient(135deg, rgba(249, 115, 22, 0.3), rgba(255,255,255,0.1))`
-                        }}
-                      >
-                        <Lock className="w-8 h-8 text-orange-600" />
-                        <div className="absolute inset-0 rounded-2xl border border-white/20" />
-                      </div>
-                      <div className="text-left">
-                        <h3 className="text-3xl font-bold text-gray-900 mb-1">Besoin d'un accès ?</h3>
-                        <p className="text-orange-600 font-semibold">Obtenez votre mot de passe maintenant</p>
-                      </div>
+                    <div 
+                      className="w-14 h-14 rounded-xl flex items-center justify-center mb-6 mx-auto relative"
+                      style={{ 
+                        background: `linear-gradient(135deg, rgba(249, 115, 22, 0.3), rgba(255,255,255,0.1))`
+                      }}
+                    >
+                      <Lock className="w-6 h-6 text-orange-600" />
+                      <div className="absolute inset-0 rounded-xl border border-white/20" />
                     </div>
                     
-                    <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 mb-8 border border-orange-200/50 relative z-10">
-                      <p className="text-gray-800 text-lg leading-relaxed mb-4">
-                        <span className="text-orange-600 font-bold">Accès sécurisé requis</span> pour consulter notre base de données d'agents vérifiés.
-                      </p>
-                      <p className="text-gray-600 mb-3">
-                        Le mot de passe change régulièrement pour garantir la sécurité.
-                        <br/><strong className="text-orange-700">Solution simple :</strong> Rejoignez notre communauté pour un accès permanent !
-                      </p>
-                      <p className="text-gray-500 text-sm italic border-t border-orange-200/30 pt-3">
-                        <HelpCircle className="w-4 h-4 inline text-orange-500 mr-1" />
-                        Des questions ? Plus d'infos disponibles sur notre plateforme.
-                      </p>
-                    </div>
+                    <motion.h3 
+                      className="text-xl font-bold text-gray-900 mb-3 group-hover:text-orange-600 transition-colors relative"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 1.3 }}
+                    >
+                      Besoin d'un accès ?
+                      <motion.div
+                        className="absolute inset-0 bg-gradient-to-r from-transparent via-orange-400/10 to-transparent opacity-0 group-hover:opacity-100"
+                        animate={{ x: ["-100%", "100%"] }}
+                        transition={{ duration: 1.5, ease: "easeInOut" }}
+                      />
+                    </motion.h3>
+                    
+                    <motion.p 
+                      className="text-gray-600 text-sm leading-relaxed mb-6"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 1.5 }}
+                    >
+                      Obtenez votre mot de passe maintenant pour consulter notre base de données d'agents vérifiés.
+                    </motion.p>
                     
                     {/* Bouton Call-to-Action plus explicite */}
                     <motion.a
@@ -459,34 +466,44 @@ function App() {
                       </div>
                     </motion.a>
                     
-                    {/* Avantages en grille plus visible */}
-                    <div className="mt-8 grid grid-cols-2 gap-6 relative z-10">
+                    {/* Avantages en grille - style harmonisé avec animations */}
+                    <div className="mt-8 grid grid-cols-2 gap-4">
                       {[
                         { icon: <Shield className="w-4 h-4 text-blue-600" />, title: "Support 24/7", desc: "Aide permanente", color: "rgba(59, 130, 246, 0.3)" },
                         { icon: <CheckCircle2 className="w-4 h-4 text-green-600" />, title: "Mises à jour", desc: "Toujours à jour", color: "rgba(16, 185, 129, 0.3)" }
                       ].map((item, index) => (
                         <motion.div
                           key={index}
-                          className="bg-white/60 backdrop-blur-sm rounded-xl p-4 border border-orange-100"
-                          whileHover={{ scale: 1.05, y: -2 }}
-                          transition={{ type: "spring", stiffness: 300 }}
+                          className="text-center"
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 1.7 + index * 0.1 }}
                         >
-                          {/* Icône avec le même style que les 3 grands blocs */}
                           <div 
-                            className="w-10 h-10 rounded-xl flex items-center justify-center mb-3 mx-auto relative"
+                            className="w-8 h-8 rounded-lg flex items-center justify-center mb-2 mx-auto relative"
                             style={{ 
                               background: `linear-gradient(135deg, ${item.color}, rgba(255,255,255,0.1))`
                             }}
                           >
                             {item.icon}
-                            {/* Bordure statique comme les grands blocs */}
-                            <div className="absolute inset-0 rounded-xl border border-white/20" />
+                            <div className="absolute inset-0 rounded-lg border border-white/20" />
                           </div>
-                          <div className="font-bold text-gray-800 text-sm text-center">{item.title}</div>
-                          <div className="text-gray-600 text-xs text-center">{item.desc}</div>
+                          <h4 className="font-semibold text-gray-900 text-sm mb-1">{item.title}</h4>
+                          <p className="text-gray-600 text-xs">{item.desc}</p>
                         </motion.div>
                       ))}
                     </div>
+
+                    <motion.div
+                      className="absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-orange-500 to-purple-500 rounded-full"
+                      initial={{ width: "0%" }}
+                      animate={{ width: "100%" }}
+                      transition={{ 
+                        delay: 1.9, 
+                        duration: 1.2,
+                        ease: "easeOut"
+                      }}
+                    />
                   </motion.div>
                 </div>
               </div>

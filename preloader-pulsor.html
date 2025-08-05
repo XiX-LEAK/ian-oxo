@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preloader Pulsor Style</title>
+    <style>
+        /* Reset et variables CSS */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-bg: #000000;
+            --secondary-bg: #1a1a1a;
+            --grid-opacity: 0.08;
+            --border-opacity: 0.12;
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.4);
+            --accent-color: #ffffff;
+            --transition-timing: cubic-bezier(0.87, 0, 0.13, 1);
+        }
+
+        /* Preloader Container - Overlay plein écran */
+        .pulsor-preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: var(--primary-bg);
+            z-index: 99999;
+            overflow: hidden;
+            opacity: 1;
+            visibility: visible;
+            transition: transform 1s var(--transition-timing), 
+                       opacity 0.6s var(--transition-timing);
+        }
+
+        /* États de sortie */
+        .pulsor-preloader.fade-out {
+            opacity: 0;
+            transform: translateY(-100vh);
+        }
+
+        .pulsor-preloader.hidden {
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        /* Fond gris initial qui disparaît */
+        .preloader-background {
+            position: absolute;
+            inset: 0;
+            background: var(--secondary-bg);
+            opacity: 1;
+            animation: backgroundFadeOut 0.8s var(--transition-timing) forwards;
+        }
+
+        @keyframes backgroundFadeOut {
+            to {
+                opacity: 0;
+            }
+        }
+
+        /* Grille de fond SVG - Style Pulsor exact */
+        .preloader-grid {
+            position: absolute;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3e%3cdefs%3e%3cpattern id='pulsor-grid' width='1' height='1' patternUnits='userSpaceOnUse' patternTransform='scale(40)'%3e%3cpath d='M 1 0 L 1 1 M 0 1 L 1 1' stroke='%23ffffff' stroke-width='0.5' stroke-dasharray='2,2' opacity='0.08'/%3e%3c/pattern%3e%3c/defs%3e%3crect width='100%25' height='100%25' fill='url(%23pulsor-grid)' /%3e%3c/svg%3e");
+            opacity: 0;
+            transform: scale(1.5);
+            animation: gridScale 1.2s var(--transition-timing) 0.2s forwards;
+        }
+
+        @keyframes gridScale {
+            to {
+                opacity: var(--grid-opacity);
+                transform: scale(1);
+            }
+        }
+
+        /* Cadre périphérique - Bordures Pulsor */
+        .preloader-frame {
+            position: absolute;
+            inset: 0;
+            transform: scale(2);
+            animation: frameScale 1.2s var(--transition-timing) 0.4s forwards;
+        }
+
+        @keyframes frameScale {
+            to {
+                transform: scale(1);
+            }
+        }
+
+        .frame-border {
+            position: absolute;
+            background: rgba(255, 255, 255, var(--border-opacity));
+        }
+
+        .frame-border.top {
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+        }
+
+        .frame-border.bottom {
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+        }
+
+        .frame-border.left {
+            top: 0;
+            bottom: 0;
+            left: 0;
+            width: 1px;
+        }
+
+        .frame-border.right {
+            top: 0;
+            bottom: 0;
+            right: 0;
+            width: 1px;
+        }
+
+        /* Colonnes de données numériques */
+        .data-columns {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .data-column {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            color: rgba(255, 255, 255, 0.12);
+            font-family: 'Courier New', 'SF Mono', 'Monaco', monospace;
+            font-size: 11px;
+            font-weight: 400;
+            line-height: 1.6;
+            white-space: pre;
+            overflow: hidden;
+            transform: translateY(0);
+        }
+
+        .data-column.column-1 {
+            left: 12%;
+            animation: columnMove1 1.8s var(--transition-timing) 1.4s forwards;
+        }
+
+        .data-column.column-2 {
+            left: 28%;
+            animation: columnMove2 1.8s var(--transition-timing) 1.6s forwards;
+        }
+
+        .data-column.column-3 {
+            left: 72%;
+            animation: columnMove3 1.8s var(--transition-timing) 1.8s forwards;
+        }
+
+        @keyframes columnMove1 {
+            to { transform: translateY(-15%); }
+        }
+
+        @keyframes columnMove2 {
+            to { transform: translateY(-45%); }
+        }
+
+        @keyframes columnMove3 {
+            to { transform: translateY(-35%); }
+        }
+
+        /* Conteneur principal du logo */
+        .preloader-content {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            transform: translateY(0);
+            transition: transform 0.8s var(--transition-timing);
+        }
+
+        .pulsor-preloader.fade-out .preloader-content {
+            transform: translateY(60vh);
+        }
+
+        /* Logo central */
+        .logo-container {
+            position: relative;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(25vw);
+            animation: logoReveal 1.2s var(--transition-timing) 0.8s forwards;
+        }
+
+        @keyframes logoReveal {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Wrapper pour l'effet de masque */
+        .logo-wrapper {
+            position: relative;
+            display: inline-block;
+            overflow: hidden;
+        }
+
+        /* Masque qui révèle le logo - Effet signature Pulsor */
+        .logo-mask {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--primary-bg);
+            z-index: 10;
+            transform: translateX(0);
+            animation: logoMaskReveal 1.2s var(--transition-timing) 2.2s forwards;
+        }
+
+        @keyframes logoMaskReveal {
+            to {
+                transform: translateX(100%);
+            }
+        }
+
+        /* Texte du logo */
+        .logo-text {
+            font-size: clamp(4rem, 12vw, 8rem);
+            font-weight: 900;
+            color: var(--text-primary);
+            line-height: 0.85;
+            letter-spacing: 0.02em;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+            margin: 0;
+            position: relative;
+            z-index: 1;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Indicateur de progression */
+        .progress-indicator {
+            position: absolute;
+            bottom: 8vh;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+        }
+
+        .progress-text {
+            color: var(--text-secondary);
+            font-family: 'Courier New', 'SF Mono', monospace;
+            font-size: 9px;
+            font-weight: 500;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            opacity: 0;
+            animation: progressFadeIn 0.6s ease-out 1.2s forwards,
+                      progressPulse 2.5s ease-in-out 2s infinite;
+        }
+
+        @keyframes progressFadeIn {
+            to { opacity: 1; }
+        }
+
+        @keyframes progressPulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.8; }
+        }
+
+        /* Barre de progression minimaliste */
+        .progress-bar {
+            width: 200px;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 16px auto 8px;
+            overflow: hidden;
+            border-radius: 1px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(255, 255, 255, 0.6) 50%, 
+                transparent 100%);
+            animation: progressFill 2.8s ease-out forwards;
+        }
+
+        @keyframes progressFill {
+            to { width: 100%; }
+        }
+
+        /* Éléments décoratifs subtils */
+        .decorative-elements {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        .floating-dot {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            opacity: 0;
+            animation: floatAnimation 4s ease-in-out infinite;
+        }
+
+        .floating-dot:nth-child(1) {
+            top: 20%;
+            left: 15%;
+            animation-delay: 0s;
+        }
+
+        .floating-dot:nth-child(2) {
+            top: 70%;
+            right: 20%;
+            animation-delay: 1.5s;
+        }
+
+        .floating-dot:nth-child(3) {
+            bottom: 30%;
+            left: 80%;
+            animation-delay: 3s;
+        }
+
+        @keyframes floatAnimation {
+            0%, 100% {
+                opacity: 0;
+                transform: translateY(0) scale(1);
+            }
+            50% {
+                opacity: 1;
+                transform: translateY(-20px) scale(1.2);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .preloader-grid {
+                background-image: url("data:image/svg+xml,%3csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3e%3cdefs%3e%3cpattern id='pulsor-grid-mobile' width='1' height='1' patternUnits='userSpaceOnUse' patternTransform='scale(20)'%3e%3cpath d='M 1 0 L 1 1 M 0 1 L 1 1' stroke='%23ffffff' stroke-width='0.5' stroke-dasharray='1,1' opacity='0.06'/%3e%3c/pattern%3e%3c/defs%3e%3crect width='100%25' height='100%25' fill='url(%23pulsor-grid-mobile)' /%3e%3c/svg%3e");
+            }
+
+            .data-column {
+                font-size: 9px;
+                line-height: 1.8;
+            }
+
+            .progress-text {
+                font-size: 8px;
+                letter-spacing: 0.15em;
+            }
+
+            .progress-bar {
+                width: 160px;
+            }
+
+            .logo-container {
+                transform: translateY(20vw);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .data-column.column-1 { left: 8%; }
+            .data-column.column-2 { left: 24%; }
+            .data-column.column-3 { left: 76%; }
+            
+            .progress-indicator {
+                bottom: 6vh;
+            }
+        }
+
+        /* Performance optimizations */
+        .pulsor-preloader * {
+            will-change: transform, opacity;
+            backface-visibility: hidden;
+            -webkit-transform-style: preserve-3d;
+            transform-style: preserve-3d;
+        }
+    </style>
+</head>
+<body>
+    <!-- Preloader Container -->
+    <div id="pulsorPreloader" class="pulsor-preloader">
+        <!-- Background fade -->
+        <div class="preloader-background"></div>
+        
+        <!-- Grid pattern -->
+        <div class="preloader-grid"></div>
+        
+        <!-- Frame borders -->
+        <div class="preloader-frame">
+            <div class="frame-border top"></div>
+            <div class="frame-border bottom"></div>
+            <div class="frame-border left"></div>
+            <div class="frame-border right"></div>
+        </div>
+        
+        <!-- Data columns -->
+        <div class="data-columns">
+            <div class="data-column column-1" id="dataColumn1"></div>
+            <div class="data-column column-2" id="dataColumn2"></div>
+            <div class="data-column column-3" id="dataColumn3"></div>
+        </div>
+        
+        <!-- Main content -->
+        <div class="preloader-content">
+            <div class="logo-container">
+                <div class="logo-wrapper">
+                    <div class="logo-mask"></div>
+                    <h1 class="logo-text">PULSOR</h1>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Progress indicator -->
+        <div class="progress-indicator">
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+            <div class="progress-text" id="progressText">INITIALIZING SYSTEMS</div>
+        </div>
+        
+        <!-- Decorative elements -->
+        <div class="decorative-elements">
+            <div class="floating-dot"></div>
+            <div class="floating-dot"></div>
+            <div class="floating-dot"></div>
+        </div>
+    </div>
+
+    <!-- Votre contenu principal -->
+    <main style="min-height: 100vh; background: #f5f5f5; padding: 50px 20px; text-align: center;">
+        <h1 style="color: #333; font-family: Arial, sans-serif; margin-bottom: 20px;">
+            Contenu Principal du Site
+        </h1>
+        <p style="color: #666; max-width: 600px; margin: 0 auto; line-height: 1.6;">
+            Le preloader s'est terminé et le contenu principal est maintenant visible. 
+            L'animation était fluide et professionnelle, inspirée du style Pulsor.agency.
+        </p>
+    </main>
+
+    <script>
+        /**
+         * Preloader Pulsor Style - JavaScript Controller
+         * Gestion intelligente du timing et des animations
+         */
+        class PulsorPreloader {
+            constructor() {
+                this.preloader = document.getElementById('pulsorPreloader');
+                this.progressText = document.getElementById('progressText');
+                this.isPageLoaded = false;
+                this.minDisplayTime = 1500; // Minimum 1.5s d'affichage
+                this.startTime = Date.now();
+                
+                this.init();
+            }
+
+            init() {
+                // Générer les colonnes de données
+                this.generateDataColumns();
+                
+                // Animation du texte de progression
+                this.animateProgressText();
+                
+                // Écouter le chargement complet de la page
+                this.setupLoadListeners();
+            }
+
+            /**
+             * Génère les colonnes de données numériques style Pulsor
+             */
+            generateDataColumns() {
+                const columns = ['dataColumn1', 'dataColumn2', 'dataColumn3'];
+                const patterns = [
+                    () => Math.random() < 0.3 ? Math.floor(Math.random() * 10) : ' ',
+                    () => Math.random() < 0.4 ? String.fromCharCode(65 + Math.floor(Math.random() * 26)) : ' ',
+                    () => Math.random() < 0.25 ? Math.floor(Math.random() * 16).toString(16).toUpperCase() : ' '
+                ];
+
+                columns.forEach((columnId, index) => {
+                    const column = document.getElementById(columnId);
+                    const pattern = patterns[index];
+                    const data = Array.from({ length: 60 }, pattern).join('\n');
+                    column.textContent = data;
+                });
+            }
+
+            /**
+             * Animation du texte de progression avec messages rotatifs
+             */
+            animateProgressText() {
+                const messages = [
+                    'INITIALIZING SYSTEMS',
+                    'LOADING PROTOCOLS',
+                    'ESTABLISHING CONNECTION',
+                    'VERIFYING SECURITY',
+                    'SYSTEM READY'
+                ];
+
+                let messageIndex = 0;
+                const interval = setInterval(() => {
+                    if (messageIndex < messages.length) {
+                        this.progressText.textContent = messages[messageIndex];
+                        messageIndex++;
+                    } else {
+                        clearInterval(interval);
+                    }
+                }, 600);
+
+                // Stocker l'interval pour le nettoyer plus tard
+                this.progressInterval = interval;
+            }
+
+            /**
+             * Configuration des écouteurs de chargement
+             */
+            setupLoadListeners() {
+                // Méthode principale - window.onload
+                window.addEventListener('load', () => {
+                    this.isPageLoaded = true;
+                    this.checkReadyToHide();
+                });
+
+                // Fallback - DOMContentLoaded
+                if (document.readyState === 'loading') {
+                    document.addEventListener('DOMContentLoaded', () => {
+                        // Attendre un peu plus après DOMContentLoaded
+                        setTimeout(() => {
+                            if (!this.isPageLoaded) {
+                                this.isPageLoaded = true;
+                                this.checkReadyToHide();
+                            }
+                        }, 500);
+                    });
+                } else {
+                    // Document déjà chargé
+                    this.isPageLoaded = true;
+                    this.checkReadyToHide();
+                }
+
+                // Sécurité - timeout maximum
+                setTimeout(() => {
+                    if (!this.isPageLoaded) {
+                        console.warn('Preloader: Timeout atteint, forçage de la fermeture');
+                        this.isPageLoaded = true;
+                        this.checkReadyToHide();
+                    }
+                }, 5000);
+            }
+
+            /**
+             * Vérifie si on peut masquer le preloader
+             */
+            checkReadyToHide() {
+                const elapsedTime = Date.now() - this.startTime;
+                const remainingTime = Math.max(0, this.minDisplayTime - elapsedTime);
+
+                if (this.isPageLoaded && elapsedTime >= this.minDisplayTime) {
+                    this.hidePreloader();
+                } else if (this.isPageLoaded) {
+                    // Attendre le temps minimum restant
+                    setTimeout(() => this.hidePreloader(), remainingTime);
+                }
+            }
+
+            /**
+             * Masque le preloader avec animation de sortie élégante
+             */
+            hidePreloader() {
+                // Nettoyer les intervals
+                if (this.progressInterval) {
+                    clearInterval(this.progressInterval);
+                }
+
+                // Message final
+                this.progressText.textContent = 'COMPLETE';
+
+                // Animation de sortie
+                setTimeout(() => {
+                    this.preloader.classList.add('fade-out');
+                    
+                    // Retirer complètement après l'animation
+                    setTimeout(() => {
+                        this.preloader.classList.add('hidden');
+                        
+                        // Optimisation - retirer du DOM après un délai
+                        setTimeout(() => {
+                            if (this.preloader.parentNode) {
+                                this.preloader.parentNode.removeChild(this.preloader);
+                            }
+                        }, 500);
+                    }, 1000);
+                }, 200);
+            }
+        }
+
+        // Initialisation automatique du preloader
+        document.addEventListener('DOMContentLoaded', () => {
+            new PulsorPreloader();
+        });
+
+        // Optimisations de performance
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                // Réduire les animations quand l'onglet n'est pas visible
+                document.body.style.animationPlayState = 'paused';
+            } else {
+                document.body.style.animationPlayState = 'running';
+            }
+        });
+    </script>
+</body>
+</html>

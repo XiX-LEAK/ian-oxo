@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/oxo-logo.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="google-site-verification" content="ueXcLUbw5cTPnzeJ32MGP-08IUo3EnXHASnO41AyIvU" />
+  <title>OXO - Annuaire B2B Révolutionnaire</title>
+  <meta name="description" content="OXO - Plateforme B2B gratuite avec des milliers d'entreprises vérifiées. Système d'authentification ultra-sécurisé et interface révolutionnaire." />
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="OXO - Annuaire B2B Révolutionnaire" />
+  <meta property="og:description" content="Plateforme B2B gratuite avec des milliers d'entreprises vérifiées" />
+  <meta property="og:image" content="/og-image.svg" />
+  
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="OXO - Annuaire B2B Révolutionnaire" />
+  <meta name="twitter:description" content="Plateforme B2B gratuite avec des milliers d'entreprises vérifiées" />
+  <meta name="twitter:image" content="/og-image.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body class="bg-dark-950 text-white overflow-x-hidden">
+  <div id="root"></div>
+  
+  <!-- Preloader Pulsor Style - Intégration simple -->
+  <script>
+    // Configuration personnalisée pour OXO
+    const preloaderConfig = {
+      minDisplayTime: 2000, // 2 secondes minimum
+      logoText: 'OXO',
+      progressMessages: [
+        'INITIALIZING OXO',
+        'LOADING AGENTS',
+        'ESTABLISHING SECURE CONNECTION',
+        'VERIFYING CREDENTIALS',
+        'PLATFORM READY'
+      ],
+      colors: {
+        primary: '#000000',
+        secondary: '#1a1a1a',
+        text: '#ffffff',
+        accent: '#f97316' // Orange OXO
+      }
+    };
+
+    // Preloader Pulsor intégré
+    const PulsorPreloader = {
+      config: {
+        minDisplayTime: 2000,
+        logoText: 'OXO',
+        progressMessages: [
+          'INITIALIZING OXO',
+          'LOADING AGENTS',
+          'ESTABLISHING CONNECTION',
+          'VERIFYING SECURITY',
+          'PLATFORM READY'
+        ]
+      },
+
+      state: {
+        isInitialized: false,
+        isPageLoaded: false,
+        startTime: null,
+        preloaderElement: null,
+        intervals: []
+      },
+
+      init(customConfig = {}) {
+        if (this.state.isInitialized) return;
+        
+        this.config = { ...this.config, ...customConfig };
+        this.state.startTime = Date.now();
+        this.state.isInitialized = true;
+
+        this.createPreloader();
+        this.setupEventListeners();
+        this.startAnimations();
+      },
+
+      createPreloader() {
+        // Injection CSS
+        const css = `
+          .oxo-preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #000;
+            z-index: 999999;
+            overflow: hidden;
+            opacity: 1;
+            visibility: visible;
+            transition: transform 1s cubic-bezier(0.87, 0, 0.13, 1),
+                       opacity 0.6s cubic-bezier(0.87, 0, 0.13, 1);
+          }
+          
+          .oxo-preloader.fade-out {
+            opacity: 0;
+            transform: translateY(-100vh);
+          }
+          
+          .oxo-preloader.hidden {
+            visibility: hidden;
+            pointer-events: none;
+          }
+          
+          .oxo-bg-fade {
+            position: absolute;
+            inset: 0;
+            background: #1a1a1a;
+            opacity: 1;
+            animation: oxoBgFade 0.8s cubic-bezier(0.87, 0, 0.13, 1) forwards;
+          }
+          
+          @keyframes oxoBgFade {
+            to { opacity: 0; }
+          }
+          
+          .oxo-grid {
+            position: absolute;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3e%3cdefs%3e%3cpattern id='oxo-grid' width='1' height='1' patternUnits='userSpaceOnUse' patternTransform='scale(40)'%3e%3cpath d='M 1 0 L 1 1 M 0 1 L 1 1' stroke='%23f97316' stroke-width='0.5' stroke-dasharray='2,2' opacity='0.08'/%3e%3c/pattern%3e%3c/defs%3e%3crect width='100%25' height='100%25' fill='url(%23oxo-grid)' /%3e%3c/svg%3e");
+            opacity: 0;
+            transform: scale(1.5);
+            animation: oxoGridScale 1.2s cubic-bezier(0.87, 0, 0.13, 1) 0.2s forwards;
+          }
+          
+          @keyframes oxoGridScale {
+            to {
+              opacity: 0.08;
+              transform: scale(1);
+            }
+          }
+          
+          .oxo-frame {
+            position: absolute;
+            inset: 0;
+            transform: scale(2);
+            animation: oxoFrameScale 1.2s cubic-bezier(0.87, 0, 0.13, 1) 0.4s forwards;
+          }
+          
+          @keyframes oxoFrameScale {
+            to { transform: scale(1); }
+          }
+          
+          .oxo-border {
+            position: absolute;
+            background: rgba(249, 115, 22, 0.12);
+          }
+          
+          .oxo-border-top { top: 0; left: 0; right: 0; height: 1px; }
+          .oxo-border-bottom { bottom: 0; left: 0; right: 0; height: 1px; }
+          .oxo-border-left { top: 0; bottom: 0; left: 0; width: 1px; }
+          .oxo-border-right { top: 0; bottom: 0; right: 0; width: 1px; }
+          
+          .oxo-columns {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            user-select: none;
+          }
+          
+          .oxo-column {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            color: rgba(249, 115, 22, 0.12);
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            font-size: 11px;
+            font-weight: 400;
+            line-height: 1.6;
+            white-space: pre;
+            overflow: hidden;
+            transform: translateY(0);
+          }
+          
+          .oxo-column-1 {
+            left: 12%;
+            animation: oxoCol1Move 1.8s cubic-bezier(0.87, 0, 0.13, 1) 1.4s forwards;
+          }
+          
+          .oxo-column-2 {
+            left: 28%;
+            animation: oxoCol2Move 1.8s cubic-bezier(0.87, 0, 0.13, 1) 1.6s forwards;
+          }
+          
+          .oxo-column-3 {
+            left: 72%;
+            animation: oxoCol3Move 1.8s cubic-bezier(0.87, 0, 0.13, 1) 1.8s forwards;
+          }
+          
+          @keyframes oxoCol1Move { to { transform: translateY(-15%); } }
+          @keyframes oxoCol2Move { to { transform: translateY(-45%); } }
+          @keyframes oxoCol3Move { to { transform: translateY(-35%); } }
+          
+          .oxo-content {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: translateY(0);
+            transition: transform 0.8s cubic-bezier(0.87, 0, 0.13, 1);
+          }
+          
+          .oxo-preloader.fade-out .oxo-content {
+            transform: translateY(60vh);
+          }
+          
+          .oxo-logo-container {
+            position: relative;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(25vw);
+            animation: oxoLogoReveal 1.2s cubic-bezier(0.87, 0, 0.13, 1) 0.8s forwards;
+          }
+          
+          @keyframes oxoLogoReveal {
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+          
+          .oxo-logo-wrapper {
+            position: relative;
+            display: inline-block;
+            overflow: hidden;
+          }
+          
+          .oxo-logo-mask {
+            position: absolute;
+            inset: 0;
+            background: #000;
+            z-index: 10;
+            transform: translateX(0);
+            animation: oxoLogoMask 1.2s cubic-bezier(0.87, 0, 0.13, 1) 2.2s forwards;
+          }
+          
+          @keyframes oxoLogoMask {
+            to { transform: translateX(100%); }
+          }
+          
+          .oxo-logo-text {
+            font-size: clamp(4rem, 12vw, 8rem);
+            font-weight: 900;
+            color: #ffffff;
+            line-height: 0.85;
+            letter-spacing: 0.02em;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            margin: 0;
+            position: relative;
+            z-index: 1;
+          }
+          
+          .oxo-progress {
+            position: absolute;
+            bottom: 8vh;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+          }
+          
+          .oxo-progress-bar {
+            width: 200px;
+            height: 1px;
+            background: rgba(249, 115, 22, 0.2);
+            margin: 16px auto 8px;
+            overflow: hidden;
+            border-radius: 1px;
+          }
+          
+          .oxo-progress-fill {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, transparent 0%, rgba(249, 115, 22, 0.8) 50%, transparent 100%);
+            animation: oxoProgressFill 2.8s ease-out forwards;
+          }
+          
+          @keyframes oxoProgressFill {
+            to { width: 100%; }
+          }
+          
+          .oxo-progress-text {
+            color: rgba(249, 115, 22, 0.6);
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            font-size: 9px;
+            font-weight: 500;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            opacity: 0;
+            animation: oxoTextFade 0.6s ease-out 1.2s forwards,
+                      oxoTextPulse 2.5s ease-in-out 2s infinite;
+          }
+          
+          @keyframes oxoTextFade { to { opacity: 1; } }
+          @keyframes oxoTextPulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+          }
+          
+          @media (max-width: 768px) {
+            .oxo-grid {
+              background-image: url("data:image/svg+xml,%3csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3e%3cdefs%3e%3cpattern id='oxo-grid-mobile' width='1' height='1' patternUnits='userSpaceOnUse' patternTransform='scale(20)'%3e%3cpath d='M 1 0 L 1 1 M 0 1 L 1 1' stroke='%23f97316' stroke-width='0.5' stroke-dasharray='1,1' opacity='0.06'/%3e%3c/pattern%3e%3c/defs%3e%3crect width='100%25' height='100%25' fill='url(%23oxo-grid-mobile)' /%3e%3c/svg%3e");
+            }
+            .oxo-column { font-size: 9px; }
+            .oxo-progress-text { font-size: 8px; }
+            .oxo-progress-bar { width: 160px; }
+          }
+          
+          .oxo-preloader * {
+            will-change: transform, opacity;
+            backface-visibility: hidden;
+          }
+        `;
+
+        const style = document.createElement('style');
+        style.textContent = css;
+        document.head.appendChild(style);
+
+        // HTML
+        const preloaderHTML = `
+          <div id="oxo-preloader" class="oxo-preloader">
+            <div class="oxo-bg-fade"></div>
+            <div class="oxo-grid"></div>
+            <div class="oxo-frame">
+              <div class="oxo-border oxo-border-top"></div>
+              <div class="oxo-border oxo-border-bottom"></div>
+              <div class="oxo-border oxo-border-left"></div>
+              <div class="oxo-border oxo-border-right"></div>
+            </div>
+            <div class="oxo-columns">
+              <div class="oxo-column oxo-column-1" id="oxo-col-1"></div>
+              <div class="oxo-column oxo-column-2" id="oxo-col-2"></div>
+              <div class="oxo-column oxo-column-3" id="oxo-col-3"></div>
+            </div>
+            <div class="oxo-content">
+              <div class="oxo-logo-container">
+                <div class="oxo-logo-wrapper">
+                  <div class="oxo-logo-mask"></div>
+                  <h1 class="oxo-logo-text">${this.config.logoText}</h1>
+                </div>
+              </div>
+            </div>
+            <div class="oxo-progress">
+              <div class="oxo-progress-bar">
+                <div class="oxo-progress-fill"></div>
+              </div>
+              <div class="oxo-progress-text" id="oxo-progress-text">
+                ${this.config.progressMessages[0]}
+              </div>
+            </div>
+          </div>
+        `;
+
+        document.body.insertAdjacentHTML('afterbegin', preloaderHTML);
+        this.state.preloaderElement = document.getElementById('oxo-preloader');
+      },
+
+      setupEventListeners() {
+        const handleLoad = () => {
+          this.state.isPageLoaded = true;
+          this.checkReadyToHide();
+        };
+
+        if (document.readyState === 'complete') {
+          handleLoad();
+        } else {
+          window.addEventListener('load', handleLoad);
+          document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+              if (!this.state.isPageLoaded) {
+                handleLoad();
+              }
+            }, 500);
+          });
+        }
+
+        setTimeout(() => {
+          if (!this.state.isPageLoaded) {
+            handleLoad();
+          }
+        }, 5000);
+      },
+
+      startAnimations() {
+        this.generateDataColumns();
+        this.animateProgressText();
+      },
+
+      generateDataColumns() {
+        const columns = ['oxo-col-1', 'oxo-col-2', 'oxo-col-3'];
+        const patterns = [
+          () => Math.random() < 0.3 ? Math.floor(Math.random() * 10) : ' ',
+          () => Math.random() < 0.4 ? String.fromCharCode(65 + Math.floor(Math.random() * 26)) : ' ',
+          () => Math.random() < 0.25 ? Math.floor(Math.random() * 16).toString(16).toUpperCase() : ' '
+        ];
+
+        columns.forEach((columnId, index) => {
+          const column = document.getElementById(columnId);
+          if (column) {
+            const pattern = patterns[index];
+            const data = Array.from({ length: 60 }, pattern).join('\n');
+            column.textContent = data;
+          }
+        });
+      },
+
+      animateProgressText() {
+        const progressText = document.getElementById('oxo-progress-text');
+        if (!progressText) return;
+
+        let messageIndex = 0;
+        const interval = setInterval(() => {
+          if (messageIndex < this.config.progressMessages.length) {
+            progressText.textContent = this.config.progressMessages[messageIndex];
+            messageIndex++;
+          } else {
+            clearInterval(interval);
+          }
+        }, 600);
+
+        this.state.intervals.push(interval);
+      },
+
+      checkReadyToHide() {
+        const elapsedTime = Date.now() - this.state.startTime;
+        const remainingTime = Math.max(0, this.config.minDisplayTime - elapsedTime);
+
+        if (this.state.isPageLoaded && elapsedTime >= this.config.minDisplayTime) {
+          this.hide();
+        } else if (this.state.isPageLoaded) {
+          setTimeout(() => this.hide(), remainingTime);
+        }
+      },
+
+      hide() {
+        this.state.intervals.forEach(interval => clearInterval(interval));
+        this.state.intervals = [];
+
+        const progressText = document.getElementById('oxo-progress-text');
+        if (progressText) {
+          progressText.textContent = 'PLATFORM READY';
+        }
+
+        setTimeout(() => {
+          if (this.state.preloaderElement) {
+            this.state.preloaderElement.classList.add('fade-out');
+            
+            setTimeout(() => {
+              this.state.preloaderElement.classList.add('hidden');
+              
+              setTimeout(() => {
+                if (this.state.preloaderElement && this.state.preloaderElement.parentNode) {
+                  this.state.preloaderElement.parentNode.removeChild(this.state.preloaderElement);
+                }
+              }, 500);
+            }, 1000);
+          }
+        }, 200);
+      }
+    };
+
+    // Initialisation
+    PulsorPreloader.init(preloaderConfig);
+  </script>
+  
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+</html>
