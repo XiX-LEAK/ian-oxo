@@ -425,7 +425,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                           <span className="text-xl">🔐</span>
                         </div>
                         <div className="text-left">
-                          <h3 className="text-xl font-bold text-gray-900">Pas le bon mot de passe ?</h3>
+                          <h3 className="text-xl font-bold text-gray-900 leading-tight">Pas le bon mot de passe&nbsp;?</h3>
                           <p className="text-orange-600 font-medium text-sm">Solution simple ci-dessous !</p>
                         </div>
                       </motion.div>
@@ -479,22 +479,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                         </div>
                       </motion.a>
                       
-                      <div className="mt-6 grid grid-cols-3 gap-3 text-xs relative z-10">
-                        {[
-                          { icon: "⚡", text: "Accès immédiat" },
-                          { icon: "🛡️", text: "Support 24/7" },
-                          { icon: "🔥", text: "Toujours à jour" }
-                        ].map((item, index) => (
-                          <motion.div
-                            key={index}
-                            className="bg-white/60 backdrop-blur-sm rounded-lg p-3 border border-orange-100"
-                            whileHover={{ scale: 1.05 }}
-                          >
-                            <div className="text-lg mb-1">{item.icon}</div>
-                            <div className="font-medium text-gray-700">{item.text}</div>
-                          </motion.div>
-                        ))}
-                      </div>
                     </motion.div>
                   )}
                 </motion.div>

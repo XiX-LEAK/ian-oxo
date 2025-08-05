@@ -35,11 +35,11 @@ function App() {
     initializeAuth();
   }, [initializeAuth]);
 
-  // Simulation du chargement initial
+  // Simulation du chargement initial - Réduit pour plus de fluidité
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 1000);
+    }, 500);
 
     return () => clearTimeout(timer);
   }, []);
@@ -90,120 +90,42 @@ function App() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-orange-50 flex items-center justify-center relative overflow-hidden">
-        <ParticleBackground particleCount={30} animated={true} />
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-orange-50/30 flex items-center justify-center relative">
+        {/* Suppression des particules pour un chargement plus fluide */}
         
         <motion.div 
           className="text-center relative z-10"
-          initial={{ opacity: 0, scale: 0.8, y: 50 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={{ 
-            type: "spring",
-            stiffness: 100,
-            damping: 20,
-            duration: 0.8 
-          }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
         >
+          {/* Logo simplifié */}
           <motion.div 
-            className="w-20 h-20 bg-gradient-primary rounded-2xl flex items-center justify-center mb-6 mx-auto relative hover-lift"
+            className="w-16 h-16 bg-gradient-primary rounded-2xl flex items-center justify-center mb-4 mx-auto"
             animate={{ 
-              rotate: [0, 5, -5, 0],
-              scale: [1, 1.05, 1]
+              rotate: [0, 360]
             }}
             transition={{
-              duration: 3,
+              duration: 2,
               repeat: Infinity,
-              ease: "easeInOut"
+              ease: "linear"
             }}
           >
-            <LoadingSpinner variant="orbital" size="md" color="#ffffff" />
-            
-            {/* Effet de halo */}
-            <motion.div
-              className="absolute inset-0 rounded-2xl bg-orange-500/20"
-              animate={{
-                scale: [1, 1.5, 1],
-                opacity: [0.5, 0, 0.5]
-              }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: "easeOut"
-              }}
-            />
+            <span className="text-2xl text-white font-bold">O</span>
           </motion.div>
           
-          <motion.h2 
-            className="text-4xl font-bold text-gradient mb-3 animate-shimmer"
-            animate={{
-              backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"]
-            }}
-            transition={{
-              duration: 3,
-              repeat: Infinity,
-              ease: "linear"
-            }}
-          >
+          {/* Titre simplifié */}
+          <h2 className="text-3xl font-bold text-gray-900 mb-2">
             OXO
-          </motion.h2>
+          </h2>
           
-          <motion.p 
-            className="text-gray-600 text-lg"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-          >
-            Chargement de la plateforme...
-          </motion.p>
+          <p className="text-gray-600 mb-4">
+            Chargement...
+          </p>
           
-          {/* Barres de progression animées */}
-          <div className="mt-6 space-y-2">
-            {[...Array(3)].map((_, i) => (
-              <motion.div
-                key={i}
-                className="h-1 bg-gray-200 rounded-full overflow-hidden"
-                style={{ width: `${60 + i * 20}px` }}
-              >
-                <motion.div
-                  className="h-full bg-gradient-primary"
-                  initial={{ x: "-100%" }}
-                  animate={{ x: "100%" }}
-                  transition={{
-                    duration: 1.5,
-                    repeat: Infinity,
-                    delay: i * 0.2,
-                    ease: "easeInOut"
-                  }}
-                />
-              </motion.div>
-            ))}
-          </div>
+          {/* Spinner simple */}
+          <div className="w-8 h-8 border-3 border-gray-200 border-t-orange-500 rounded-full animate-spin mx-auto"></div>
         </motion.div>
-        
-        {/* Cercles de fond animés - Réduits */}
-        {[...Array(3)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute rounded-full border-2 border-orange-200/30"
-            style={{
-              width: 100 + i * 50,
-              height: 100 + i * 50,
-              left: '50%',
-              top: '50%',
-              marginLeft: -(50 + i * 25),
-              marginTop: -(50 + i * 25)
-            }}
-            animate={{
-              rotate: 360,
-              scale: [1, 1.1, 1]
-            }}
-            transition={{
-              duration: 10 + i * 2,
-              repeat: Infinity,
-              ease: "linear"
-            }}
-          />
-        ))}
       </div>
     );
   }
@@ -227,26 +149,24 @@ function App() {
         {!hasAccessToSite ? (
           // Landing Page pour utilisateurs sans accès au site
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative min-h-screen pb-20">
-            {/* Éléments flottants décoratifs - Optimisés */}
+            {/* Éléments flottants décoratifs - Réduits pour fluidité */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
-              {[...Array(4)].map((_, i) => (
+              {[...Array(2)].map((_, i) => (
                 <motion.div
                   key={i}
-                  className="absolute w-2 h-2 bg-gradient-to-r from-orange-400 to-purple-500 rounded-full opacity-60"
+                  className="absolute w-1 h-1 bg-orange-400 rounded-full opacity-40"
                   style={{
-                    left: `${Math.random() * 100}%`,
-                    top: `${Math.random() * 100}%`,
+                    left: `${20 + i * 60}%`,
+                    top: `${20 + i * 60}%`,
                   }}
                   animate={{
-                    x: [0, Math.random() * 100 - 50],
-                    y: [0, Math.random() * 100 - 50],
-                    scale: [1, 1.5, 1],
-                    opacity: [0.3, 0.8, 0.3]
+                    y: [0, -20, 0],
+                    opacity: [0.2, 0.6, 0.2]
                   }}
                   transition={{
-                    duration: 3 + Math.random() * 2,
+                    duration: 4,
                     repeat: Infinity,
-                    delay: i * 0.3,
+                    delay: i * 2,
                     ease: "easeInOut"
                   }}
                 />
@@ -256,52 +176,17 @@ function App() {
             <ScrollReveal variant="fadeInUp" className="text-center py-10 md:py-20 relative z-10">
               {/* Logo supprimé pour optimisation */}
               
-              {/* Titre avec effet de texte liquide */}
+              {/* Titre simplifié pour plus de fluidité */}
               <motion.h1 
-                className="text-4xl md:text-6xl lg:text-8xl font-bold mb-6 md:mb-8 relative"
-                initial={{ opacity: 0, y: 50 }}
+                className="text-4xl md:text-6xl lg:text-8xl font-bold mb-6 md:mb-8"
+                initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3, duration: 0.8 }}
+                transition={{ delay: 0.2, duration: 0.6 }}
               >
                 <span className="text-gray-900">Bienvenue sur </span>
-                <motion.span 
-                  className="text-gradient bg-gradient-to-r from-orange-500 via-red-500 to-purple-600 bg-clip-text text-transparent relative inline-block"
-                  animate={{
-                    backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
-                    scale: [1, 1.05, 1]
-                  }}
-                  transition={{
-                    backgroundPosition: { duration: 3, repeat: Infinity },
-                    scale: { duration: 2, repeat: Infinity, ease: "easeInOut" }
-                  }}
-                  style={{ backgroundSize: "200% 200%" }}
-                >
+                <span className="text-gradient bg-gradient-to-r from-orange-500 via-red-500 to-purple-600 bg-clip-text text-transparent">
                   OXO
-                  
-                  {/* Effet de particules autour du texte - Réduit */}
-                  {[...Array(3)].map((_, i) => (
-                    <motion.div
-                      key={i}
-                      className="absolute w-1 h-1 bg-orange-500 rounded-full"
-                      style={{
-                        left: `${Math.random() * 100}%`,
-                        top: `${Math.random() * 100}%`,
-                      }}
-                      animate={{
-                        scale: [0, 1, 0],
-                        opacity: [0, 1, 0],
-                        x: [0, (Math.random() - 0.5) * 50],
-                        y: [0, (Math.random() - 0.5) * 50]
-                      }}
-                      transition={{
-                        duration: 2,
-                        repeat: Infinity,
-                        delay: i * 0.3,
-                        ease: "easeOut"
-                      }}
-                    />
-                  ))}
-                </motion.span>
+                </span>
               </motion.h1>
               
               {/* Description avec effet typewriter responsive */}
@@ -409,30 +294,7 @@ function App() {
                       transition: { duration: 0.3 }
                     }}
                   >
-                    {/* Particules flottantes dans la carte - Optimisées */}
-                    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                      {[...Array(2)].map((_, i) => (
-                        <motion.div
-                          key={i}
-                          className="absolute w-1 h-1 bg-orange-400 rounded-full opacity-40"
-                          style={{
-                            left: `${20 + i * 30}%`,
-                            top: `${20 + i * 20}%`,
-                          }}
-                          animate={{
-                            y: [0, -15, 0],
-                            opacity: [0.2, 0.6, 0.2],
-                            scale: [1, 1.5, 1]
-                          }}
-                          transition={{
-                            duration: 2 + i * 0.5,
-                            repeat: Infinity,
-                            delay: i * 0.4,
-                            ease: "easeInOut"
-                          }}
-                        />
-                      ))}
-                    </div>
+                    {/* Particules supprimées pour plus de fluidité */}
 
                     {/* Icône avec effet lumineux */}
                     <motion.div 
